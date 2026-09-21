@@ -449,6 +449,7 @@ const HERO_ANGLES = {
 
 /* ---- logo ---- */
 function setLogo(key){
+  if (!LOGOS[key]) key = 'revision_chris';
   const item = LOGOS[key];
   const slot = document.getElementById('logo-slot');
   slot.style.opacity = 0;
