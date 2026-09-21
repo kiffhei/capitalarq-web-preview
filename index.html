@@ -60,6 +60,13 @@
   .whatsapp-chip:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(30,163,85,.35); }
   .whatsapp-chip:active { transform:translateY(0); transition-duration:var(--dur-out); }
   @media (max-width:760px){ nav.site-nav{ display:none; } }
+  @media (max-width:480px){
+    .site-head-inner{ gap:14px; padding:14px 16px; min-height:auto; }
+    .logo-slot{ height:52px; }
+    .logo-slot svg, .logo-slot img{ height:52px; max-width:160px; }
+    .whatsapp-chip{ padding:9px 14px; font-size:13px; gap:6px; }
+    .whatsapp-chip svg{ width:16px; height:16px; }
+  }
 
   /* ---- secciones editables ---- */
   #page-sections > section { position:relative; padding:72px 0; border-bottom:1px solid var(--border); overflow:hidden; }
@@ -408,16 +415,6 @@ const LOGOS = {
     label: "Revisión con Chris",
     kind: "svg",
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 250"><g transform="translate(190,-6) scale(1.9)" fill="none" stroke-linecap="square" stroke-linejoin="miter"><polyline points="14,110 14,69.3" stroke="#B28028" stroke-width="1.4"/><polyline points="14,69.3 35.7,86.5 35.7,110" stroke="var(--text)" stroke-width="1.4"/><polyline points="26.2,72.4 54.8,49.8 54.8,110" stroke="var(--text)" stroke-width="1.4"/><polyline points="63.8,110 63.8,38 94.2,63.4 94.2,76.0" stroke="var(--text)" stroke-width="1.4"/><polyline points="86.0,110 86.0,86.0 109.1,69.3" stroke="var(--text)" stroke-width="1.4"/><polyline points="109.1,69.3 109.1,110" stroke="#07396F" stroke-width="1.4"/><line x1="8" y1="110" x2="118" y2="110" stroke="var(--text)" stroke-width="1.4"/></g><text x="16" y="200" font-family="'Poppins',sans-serif" font-weight="700" font-size="52" fill="var(--text)">Capitalarq</text><text x="17" y="228" font-family="'IBM Plex Mono',monospace" font-weight="500" letter-spacing="2.2" font-size="14" fill="var(--text-muted)">PROTECCIÓN CIVIL Y ARQUITECTURA</text></svg>`
-  },
-  sello_color: {
-    label: "Sello propio",
-    kind: "svg",
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 250"><g transform="translate(190,4) scale(1.5)" fill="none"><rect x="18" y="64" width="30" height="48" stroke="var(--text)" stroke-width="1.7"/><polygon points="18,64 29,56 59,56 48,64" stroke="var(--text)" stroke-width="1.7"/><line x1="48" y1="64" x2="59" y2="56" stroke="var(--text)" stroke-width="1.7"/><rect x="40" y="44" width="28" height="68" stroke="var(--text)" stroke-width="1.7"/><polygon points="40,44 51,36 79,36 68,44" stroke="var(--text)" stroke-width="1.7"/><line x1="68" y1="44" x2="79" y2="36" stroke="var(--text)" stroke-width="1.7"/><rect x="64" y="24" width="22" height="88" stroke="var(--accent)" stroke-width="1.7"/><polygon points="64,24 75,16 97,16 86,24" stroke="var(--accent)" stroke-width="1.7"/><line x1="86" y1="24" x2="97" y2="16" stroke="var(--accent)" stroke-width="1.7"/><rect x="82" y="58" width="28" height="54" stroke="var(--text)" stroke-width="1.7"/><polygon points="82,58 93,50 121,50 110,58" stroke="var(--text)" stroke-width="1.7"/><line x1="110" y1="58" x2="121" y2="50" stroke="var(--text)" stroke-width="1.7"/><line x1="12" y1="112" x2="118" y2="112" stroke="var(--text)" stroke-width="1.7"/></g><text x="16" y="200" font-family="'Baloo 2',sans-serif" font-weight="700" font-size="52" fill="var(--text)">Capitalarq</text><text x="17" y="228" font-family="'IBM Plex Mono',monospace" font-weight="500" letter-spacing="2.2" font-size="14" fill="var(--text-muted)">PROTECCIÓN CIVIL Y ARQUITECTURA</text></svg>`
-  },
-  ronda2_paleta: {
-    label: "Ronda 2 — retícula",
-    kind: "svg",
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 250"><g transform="translate(210,-6) scale(1.55)" fill="none"><polygon points="20,109 20,68 48,48 48,109" stroke="var(--text)" stroke-width="1.8"/><polygon points="48,109 48,48 76,72 76,109" stroke="var(--text)" stroke-width="1.8"/><polygon points="76,109 76,72 100,28 100,109" stroke="var(--accent)" stroke-width="1.8"/><polygon points="100,109 100,28 128,58 128,109" stroke="var(--accent)" stroke-width="1.8"/><polygon points="128,109 128,58 154,66 154,109" stroke="var(--text)" stroke-width="1.8"/><polygon points="154,109 154,66 180,88 180,109" stroke="var(--text)" stroke-width="1.8"/><line x1="20" y1="109" x2="180" y2="109" stroke="var(--text)" stroke-width="1.8"/></g><text x="16" y="200" font-family="'Baloo 2',sans-serif" font-weight="700" font-size="52" fill="var(--text)">Capitalarq</text><text x="17" y="228" font-family="'IBM Plex Mono',monospace" font-weight="500" letter-spacing="2.2" font-size="14" fill="var(--text-muted)">PROTECCIÓN CIVIL Y ARQUITECTURA</text></svg>`
   },
   ronda2_monograma: {
     label: "Ronda 2 — monograma",
@@ -787,7 +784,7 @@ restoreOrder();
 addToolbars();
 persistEditable();
 setupReveal();
-setLogo(localStorage.getItem('capitalarq_maqueta_logo') || 'sello_color');
+setLogo(localStorage.getItem('capitalarq_maqueta_logo') || 'revision_chris');
 applyAccent(localStorage.getItem('capitalarq_maqueta_accent') || 'azul');
 setAngle(localStorage.getItem('capitalarq_maqueta_angle') || 'a');
 buildBoxes();
