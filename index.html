@@ -271,6 +271,25 @@
   #btn-guardar-cambios:hover { transform:translateY(-2px); box-shadow:0 12px 28px rgba(0,0,0,.34); }
   #btn-guardar-cambios:active { transform:translateY(0); }
 
+  /* ---- boton flotante: vista previa (oculta los controles de revision) ---- */
+  #btn-preview {
+    position:fixed; bottom:16px; left:50%; transform:translateX(-50%); z-index:110;
+    background:var(--surface); color:var(--text); border:1px solid var(--border); border-radius:24px;
+    padding:11px 18px; font-size:13px; font-weight:600; font-family:inherit; cursor:pointer;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);
+    transition: transform var(--dur-out) var(--ease-in), box-shadow var(--dur-in) var(--ease-out), background var(--dur-in) var(--ease-out);
+  }
+  #btn-preview:hover { transform:translateX(-50%) translateY(-2px); box-shadow:0 12px 28px rgba(0,0,0,.24); }
+  body.preview-mode #btn-preview { background:var(--brand-ink); color:var(--brand-paper); border-color:var(--brand-ink); }
+
+  /* en vista previa: se oculta todo el "chrome" de revision, queda solo el sitio real */
+  body.preview-mode .aviso-maqueta,
+  body.preview-mode .sec-toolbar,
+  body.preview-mode #btn-guardar-cambios,
+  body.preview-mode #panel-revision { display:none !important; }
+  body.preview-mode [contenteditable] { outline:none !important; cursor:default; }
+  body.preview-mode #page-sections > section:hover { outline:none !important; }
+
   /* ---- modal: resumen de cambios ---- */
   .modal-cambios-fondo {
     position:fixed; inset:0; z-index:200; background:rgba(10,12,16,.55);
@@ -459,6 +478,7 @@
 </div>
 
 <button id="btn-guardar-cambios" onclick="abrirModalCambios()">💾 Guardar cambios</button>
+<button id="btn-preview" onclick="togglePreview()">👁 Vista previa</button>
 
 <div class="modal-cambios-fondo hidden" id="modal-cambios-fondo">
   <div class="modal-cambios">
@@ -728,6 +748,16 @@ function enviarResumenPorCorreo(){
   const cuerpo = encodeURIComponent(texto);
   window.location.href = `mailto:knoxbass@gmail.com?subject=${asunto}&body=${cuerpo}`;
 }
+function togglePreview(){
+  const on = document.body.classList.toggle('preview-mode');
+  document.querySelectorAll('[contenteditable]').forEach(el => {
+    el.setAttribute('contenteditable', on ? 'false' : 'true');
+  });
+  document.getElementById('btn-preview').textContent = on ? '✏️ Salir de vista previa' : '👁 Vista previa';
+  // ocultar el aviso/toolbars cambia la altura de la pagina: el hero-pin necesita recalcular
+  if (typeof ScrollTrigger !== 'undefined') setTimeout(() => ScrollTrigger.refresh(), 50);
+}
+
 function toggleReviewPanel(){
   const panel = document.getElementById('panel-revision');
   panel.classList.toggle('collapsed');
