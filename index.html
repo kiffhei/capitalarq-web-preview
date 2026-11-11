@@ -43,8 +43,14 @@
 
   /* ---- header ---- */
   header.site {
-    position:sticky; top:0; z-index:30; background:var(--bg);
-    border-bottom:1px solid var(--border); transition:background var(--dur-in) var(--ease-out), border-color var(--dur-in) var(--ease-out);
+    position:sticky; top:0; z-index:30;
+    background:rgba(243,241,237,.86); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    transition:background var(--dur-in) var(--ease-out), border-color var(--dur-in) var(--ease-out), box-shadow var(--dur-in) var(--ease-out);
+  }
+  header.site.is-scrolled { box-shadow:0 6px 24px rgba(20,23,26,.1); }
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+    header.site { background:var(--bg); }
   }
   .site-head-inner { display:flex; align-items:center; justify-content:space-between; gap:28px; padding:20px 24px; max-width:1140px; margin:0 auto; min-height:108px; }
   .logo-slot { display:flex; align-items:center; height:88px; }
@@ -206,12 +212,30 @@
   footer.site { position:relative; background:var(--footer-bg); color:var(--footer-text); padding:64px 0 30px; overflow:hidden; transition:background var(--dur-in) var(--ease-out); }
   footer.site .wrap { position:relative; z-index:1; }
   footer.site h2 { font-size:26px; margin:0 0 18px; max-width:520px; }
+  footer.site h2.mask-foto {
+    font-size:44px; font-weight:800; line-height:1.08; max-width:620px; letter-spacing:-.01em;
+    background-image:url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1200&q=70');
+    background-size:cover; background-position:center 45%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  @media (max-width:600px){ footer.site h2.mask-foto { font-size:30px; } }
+  @supports not ((background-clip:text) or (-webkit-background-clip:text)) {
+    footer.site h2.mask-foto { background-image:none; color:var(--footer-text); }
+  }
+  /* repetido tras las reglas genericas de [contenteditable] para ganar la cascada:
+     sin esto, :hover/:focus pintarian un background solido y taparian la foto */
+  footer.site h2.mask-foto:hover, footer.site h2.mask-foto:focus {
+    background-image:url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1200&q=70');
+    background-size:cover; -webkit-background-clip:text; background-clip:text; color:transparent;
+    outline:2px dashed var(--accent); outline-offset:4px;
+  }
   footer.site .btn-primario { background:var(--accent); color:#fff; }
   .footer-meta { margin-top:50px; padding-top:24px; border-top:1px solid rgba(255,255,255,.12); display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-size:12.5px; color:var(--footer-text-muted); }
 
-  /* ---- panel de revisión (interno) ---- */
+  /* ---- panel de revisión ---- */
   #panel-revision {
-    position:fixed; bottom:16px; right:16px; z-index:100; width:300px;
+    position:fixed; bottom:16px; right:16px; z-index:100;
+    width:300px; max-width:calc(100vw - 32px);
     background:var(--surface); border:1px solid var(--border); border-radius:8px;
     box-shadow:0 8px 28px rgba(0,0,0,.22); font-size:12.5px; color:var(--text);
     transition: background var(--dur-in) var(--ease-out), border-color var(--dur-in) var(--ease-out);
@@ -241,11 +265,58 @@
   .swatch.active { border-color:var(--text); }
   #panel-revision .pr-note { color:var(--text-muted); line-height:1.5; }
   #panel-revision .pr-reset { align-self:flex-start; color:#B3413A; background:none; border:none; text-decoration:underline; cursor:pointer; font-size:11.5px; padding:0; }
+
+  /* ---- distribucion de titulares: sin viudas ---- */
+  #hero-h1, #nosotros h2, footer.site h2, .card-servicio h3, .paso h3 { text-wrap:balance; }
+
+  /* ---- afordancia de edicion visible tambien en touch (sin :hover) ---- */
+  @media (hover:none) {
+    [contenteditable="true"] { outline:1px dashed var(--accent); outline-offset:2px; }
+    .sec-toolbar { opacity:1; }
+    .sec-toolbar button { width:32px; height:32px; font-size:14px; }
+  }
+
+  /* ---- boton flotante: guardar y enviar cambios ---- */
+  #btn-guardar-cambios {
+    position:fixed; bottom:16px; left:16px; z-index:100;
+    display:flex; align-items:center; gap:8px;
+    background:var(--brand-ink); color:var(--brand-paper); border:none; border-radius:24px;
+    padding:13px 20px; font-size:14px; font-weight:600; font-family:inherit; cursor:pointer;
+    box-shadow:0 8px 24px rgba(0,0,0,.28);
+    transition: transform var(--dur-out) var(--ease-in), box-shadow var(--dur-in) var(--ease-out);
+  }
+  #btn-guardar-cambios:hover { transform:translateY(-2px); box-shadow:0 12px 28px rgba(0,0,0,.34); }
+  #btn-guardar-cambios:active { transform:translateY(0); }
+
+  /* ---- modal: resumen de cambios ---- */
+  .modal-cambios-fondo {
+    position:fixed; inset:0; z-index:200; background:rgba(10,12,16,.55);
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .hidden { display:none !important; }
+  .modal-cambios {
+    background:var(--surface); color:var(--text); border-radius:10px; width:100%; max-width:560px;
+    max-height:85vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,.35);
+  }
+  .modal-cambios header { padding:18px 22px; border-bottom:1px solid var(--border); }
+  .modal-cambios header h3 { margin:0 0 4px; font-size:17px; }
+  .modal-cambios header p { margin:0; font-size:13px; color:var(--text-muted); }
+  .modal-cambios .modal-body { padding:16px 22px; overflow-y:auto; }
+  .modal-cambios textarea {
+    width:100%; min-height:260px; font-family:'IBM Plex Mono',monospace; font-size:12px; line-height:1.6;
+    border:1px solid var(--border); border-radius:6px; padding:12px; resize:vertical; background:var(--surface-2); color:var(--text);
+  }
+  .modal-cambios .modal-warning { margin:10px 0 0; font-size:12px; color:#B3413A; }
+  .modal-cambios footer { padding:16px 22px; border-top:1px solid var(--border); display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+  .modal-cambios footer button { font-family:inherit; }
+  .modal-cambios .btn-copiar { background:var(--surface); color:var(--text); border:1px solid var(--border); border-radius:4px; padding:10px 16px; font-size:13px; font-weight:600; cursor:pointer; }
+  .modal-cambios .btn-correo { background:var(--accent); color:#fff; border:none; border-radius:4px; padding:10px 16px; font-size:13px; font-weight:600; cursor:pointer; }
+  .modal-cambios .btn-cerrar { background:none; color:var(--text-muted); border:none; padding:10px 6px; font-size:13px; cursor:pointer; margin-right:auto; }
 </style>
 </head>
 <body>
 
-<div class="aviso-maqueta">Maqueta preliminar — texto, orden de secciones, logo y acento son de prueba. Usa el panel de la esquina para comparar.</div>
+<div class="aviso-maqueta">Maqueta preliminar — toca cualquier texto para editarlo. Cuando termines, pulsa «Guardar cambios» abajo a la izquierda.</div>
 
 <header class="site" id="site-header">
   <div class="site-head-inner">
@@ -267,12 +338,12 @@
     <div class="boxes-wrap"><div class="boxes-grid" id="boxes-grid"></div></div>
     <div class="boxes-vignette"></div>
     <div class="wrap hero-inner reveal">
-      <div class="kicker" id="hero-eyebrow" contenteditable="true">GESTIÓN DE TRÁMITES DE CONSTRUCCIÓN EN CDMX</div>
-      <h1 id="hero-h1" contenteditable="true" style="margin:14px 0 18px;">Tu obra no tiene por qué parar por un trámite.</h1>
-      <p class="entradilla" id="hero-entradilla" contenteditable="true" style="margin:0 auto 30px;">Manifestaciones de Construcción, EROD, licencias y firmas de D.R.O. — armamos el expediente y le damos seguimiento hasta que avanza. Tú no pierdes tiempo aprendiendo una plataforma que no vas a volver a usar.</p>
+      <div class="kicker" id="hero-eyebrow" contenteditable="true" data-label="Hero · Etiqueta superior">GESTIÓN DE TRÁMITES DE CONSTRUCCIÓN EN CDMX</div>
+      <h1 id="hero-h1" contenteditable="true" style="margin:14px 0 18px;" data-label="Hero · Título principal">Tu obra no tiene por qué parar por un trámite.</h1>
+      <p class="entradilla" id="hero-entradilla" contenteditable="true" style="margin:0 auto 30px;" data-label="Hero · Párrafo">Manifestaciones de Construcción, EROD, licencias y firmas de D.R.O. — armamos el expediente y le damos seguimiento hasta que avanza. Tú no pierdes tiempo aprendiendo una plataforma que no vas a volver a usar.</p>
       <div class="cta-row" style="justify-content:center;">
-        <a class="btn btn-primario" id="hero-cta1" contenteditable="true" href="#">Cuéntanos tu caso</a>
-        <a class="btn btn-secundario" id="hero-cta2" contenteditable="true" href="#">Escríbenos por WhatsApp</a>
+        <a class="btn btn-primario" id="hero-cta1" contenteditable="true" href="#" data-label="Hero · Botón 1">Cuéntanos tu caso</a>
+        <a class="btn btn-secundario" id="hero-cta2" contenteditable="true" href="#" data-label="Hero · Botón 2">Escríbenos por WhatsApp</a>
       </div>
     </div>
   </section>
@@ -284,23 +355,23 @@
       <div class="flujo-grid">
         <div class="paso">
           <div class="paso-num">01</div>
-          <h3 contenteditable="true">Diagnóstico</h3>
-          <p contenteditable="true">Revisamos tu predio y el uso de suelo para saber qué trámite aplica de verdad.</p>
+          <h3 contenteditable="true" data-field="flujo-1-titulo" data-label="Cómo trabajamos · Paso 1 · Título">Diagnóstico</h3>
+          <p contenteditable="true" data-field="flujo-1-texto" data-label="Cómo trabajamos · Paso 1 · Texto">Revisamos tu predio y el uso de suelo para saber qué trámite aplica de verdad.</p>
         </div>
         <div class="paso">
           <div class="paso-num">02</div>
-          <h3 contenteditable="true">Gestión ante alcaldía</h3>
-          <p contenteditable="true">Integramos el expediente completo y lo ingresamos ante la autoridad.</p>
+          <h3 contenteditable="true" data-field="flujo-2-titulo" data-label="Cómo trabajamos · Paso 2 · Título">Gestión ante alcaldía</h3>
+          <p contenteditable="true" data-field="flujo-2-texto" data-label="Cómo trabajamos · Paso 2 · Texto">Integramos el expediente completo y lo ingresamos ante la autoridad.</p>
         </div>
         <div class="paso">
           <div class="paso-num">03</div>
-          <h3 contenteditable="true">Seguimiento</h3>
-          <p contenteditable="true">Atendemos cualquier prevención o requerimiento hasta que el trámite avanza. Aquí no tienes que hacer nada.</p>
+          <h3 contenteditable="true" data-field="flujo-3-titulo" data-label="Cómo trabajamos · Paso 3 · Título">Seguimiento</h3>
+          <p contenteditable="true" data-field="flujo-3-texto" data-label="Cómo trabajamos · Paso 3 · Texto">Atendemos cualquier prevención o requerimiento hasta que el trámite avanza. Aquí no tienes que hacer nada.</p>
         </div>
         <div class="paso">
           <div class="paso-num">04</div>
-          <h3 contenteditable="true">Entrega</h3>
-          <p contenteditable="true">Resolución en mano y tu expediente completo, en digital.</p>
+          <h3 contenteditable="true" data-field="flujo-4-titulo" data-label="Cómo trabajamos · Paso 4 · Título">Entrega</h3>
+          <p contenteditable="true" data-field="flujo-4-texto" data-label="Cómo trabajamos · Paso 4 · Texto">Resolución en mano y tu expediente completo, en digital.</p>
         </div>
       </div>
       </div>
@@ -320,27 +391,27 @@
   <section id="servicios">
     <div class="wrap reveal">
       <div class="kicker">Servicios</div>
-      <h2 style="margin:8px 0 0;font-size:26px;" contenteditable="true">En qué te acompañamos</h2>
+      <h2 style="margin:8px 0 0;font-size:26px;" contenteditable="true" data-field="servicios-titulo" data-label="Servicios · Título de sección">En qué te acompañamos</h2>
       <div class="servicios-grid">
         <div class="card-servicio">
           <div class="foto"><img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=700&q=60" alt="Planos arquitectónicos" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
           <div class="body">
-            <h3 contenteditable="true">Licencias de construcción y operación</h3>
-            <p contenteditable="true">Manifestaciones de Construcción (A, B y C) y licencias de operación, armadas y gestionadas de principio a fin.</p>
+            <h3 contenteditable="true" data-field="servicio-1-titulo" data-label="Servicios · Tarjeta 1 · Título">Licencias de construcción y operación</h3>
+            <p contenteditable="true" data-field="servicio-1-texto" data-label="Servicios · Tarjeta 1 · Texto">Manifestaciones de Construcción (A, B y C) y licencias de operación, armadas y gestionadas de principio a fin.</p>
           </div>
         </div>
         <div class="card-servicio">
           <div class="foto"><img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=700&q=60" alt="Revisión de expediente técnico" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
           <div class="body">
-            <h3 contenteditable="true">Firmas de D.R.O. y corresponsables</h3>
-            <p contenteditable="true">Director Responsable de Obra y corresponsables registrados ante la Ciudad de México, para el proyecto que ya tienes en marcha.</p>
+            <h3 contenteditable="true" data-field="servicio-2-titulo" data-label="Servicios · Tarjeta 2 · Título">Firmas de D.R.O. y corresponsables</h3>
+            <p contenteditable="true" data-field="servicio-2-texto" data-label="Servicios · Tarjeta 2 · Texto">Director Responsable de Obra y corresponsables registrados ante la Ciudad de México, para el proyecto que ya tienes en marcha.</p>
           </div>
         </div>
         <div class="card-servicio">
           <div class="foto"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=700&q=60" alt="Obra en construcción" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
           <div class="body">
-            <h3 contenteditable="true">Protección civil (EROD)</h3>
-            <p contenteditable="true">Estudio de Riesgo de Obra y/o Demolición, registrado ante la SGIRPC, con cada dato citado por fuente.</p>
+            <h3 contenteditable="true" data-field="servicio-3-titulo" data-label="Servicios · Tarjeta 3 · Título">Protección civil (EROD)</h3>
+            <p contenteditable="true" data-field="servicio-3-texto" data-label="Servicios · Tarjeta 3 · Texto">Estudio de Riesgo de Obra y/o Demolición, registrado ante la SGIRPC, con cada dato citado por fuente.</p>
           </div>
         </div>
       </div>
@@ -357,8 +428,8 @@
       </div>
       <div>
         <div class="kicker">Nosotros</div>
-        <h2 style="margin:8px 0 12px;font-size:29px;" contenteditable="true">Quién responde cuando algo se atora</h2>
-        <p contenteditable="true" style="font-size:17px;color:var(--text-muted);max-width:520px;">CapitalArq lo dirige el Arq. Christhian Jair Cruz Ruiz, Director Responsable de Obra registrado ante la Ciudad de México. No es un call center ni una plataforma — es la misma persona que revisa tu expediente la que responde cuando la alcaldía pide algo más.</p>
+        <h2 style="margin:8px 0 12px;font-size:29px;" contenteditable="true" data-field="nosotros-titulo" data-label="Nosotros · Título">Quién responde cuando algo se atora</h2>
+        <p contenteditable="true" style="font-size:17px;color:var(--text-muted);max-width:520px;" data-field="nosotros-texto" data-label="Nosotros · Texto">CapitalArq lo dirige el Arq. Christhian Jair Cruz Ruiz, Director Responsable de Obra registrado ante la Ciudad de México. No es un call center ni una plataforma — es la misma persona que revisa tu expediente la que responde cuando la alcaldía pide algo más.</p>
       </div>
     </div>
   </section>
@@ -368,8 +439,8 @@
 <footer class="site">
   <div class="wrap">
     <div class="kicker" style="color:#8fb8e0;">¿Tu obra está parada por un trámite?</div>
-    <h2 contenteditable="true">Escríbenos y vemos qué necesita tu caso.</h2>
-    <a class="btn btn-primario" contenteditable="true" href="#">Escríbenos por WhatsApp</a>
+    <h2 class="mask-foto" contenteditable="true" data-field="footer-titulo" data-label="Pie de página · Título">Escríbenos y vemos qué necesita tu caso.</h2>
+    <a class="btn btn-primario" contenteditable="true" href="#" data-field="footer-cta" data-label="Pie de página · Botón">Escríbenos por WhatsApp</a>
     <div class="footer-meta">
       <div>CapitalArq — Protección Civil y Arquitectura</div>
       <div>Instagram: <a href="https://instagram.com/capitalarq" target="_blank" style="color:#8fb8e0;">@capitalarq</a></div>
@@ -378,10 +449,10 @@
   </div>
 </footer>
 
-<div id="panel-revision">
-  <div class="pr-head" onclick="document.getElementById('panel-revision').classList.toggle('collapsed')">
-    <span><b>Panel de revisión</b> <span class="tag">interno</span></span>
-    <span id="pr-caret">▾</span>
+<div id="panel-revision" class="collapsed">
+  <div class="pr-head" onclick="toggleReviewPanel()">
+    <span><b>Panel de revisión</b> <span class="tag">elige tu versión</span></span>
+    <span id="pr-caret">▸</span>
   </div>
   <div class="pr-body">
     <div>
@@ -399,8 +470,28 @@
         <button data-angle="b">B — Educación</button>
       </div>
     </div>
-    <p class="pr-note">Texto y orden de secciones son editables (pasa el mouse sobre cada bloque). Fotos son de Unsplash, temporales — se sustituyen por las de Chris. Los cambios se guardan solo en este navegador.</p>
+    <p class="pr-note">Toca cualquier texto de la página para editarlo, y usa los botones ▲▼ que aparecen sobre cada sección para reordenarla. Fotos son de Unsplash, temporales — se sustituyen por las de Chris. Cuando termines, pulsa «Guardar cambios» abajo a la izquierda para mandárnoslo.</p>
     <button class="pr-reset" onclick="resetMaqueta()">Restablecer todo</button>
+  </div>
+</div>
+
+<button id="btn-guardar-cambios" onclick="abrirModalCambios()">💾 Guardar cambios</button>
+
+<div class="modal-cambios-fondo hidden" id="modal-cambios-fondo">
+  <div class="modal-cambios">
+    <header>
+      <h3>Resumen de tus cambios</h3>
+      <p>Esto es exactamente lo que vamos a aplicar al sitio. Mándanoslo por correo o cópialo y pégalo donde prefieras.</p>
+    </header>
+    <div class="modal-body">
+      <textarea id="texto-cambios" readonly></textarea>
+      <p class="modal-warning hidden" id="aviso-largo">El resumen es largo — si el correo se abre vacío, usa «Copiar resumen» y pégalo en un correo o WhatsApp directo a Brian.</p>
+    </div>
+    <footer>
+      <button class="btn-cerrar" onclick="cerrarModalCambios()">Cerrar</button>
+      <button class="btn-copiar" id="btn-copiar" onclick="copiarResumenCambios()">Copiar resumen</button>
+      <button class="btn-correo" onclick="enviarResumenPorCorreo()">Enviar por correo</button>
+    </footer>
   </div>
 </div>
 
@@ -448,8 +539,10 @@ const HERO_ANGLES = {
 };
 
 /* ---- logo ---- */
+let currentLogo = 'revision_chris';
 function setLogo(key){
   if (!LOGOS[key]) key = 'revision_chris';
+  currentLogo = key;
   const item = LOGOS[key];
   const slot = document.getElementById('logo-slot');
   slot.style.opacity = 0;
@@ -501,7 +594,9 @@ function buildAccentOpts(){
 }
 
 /* ---- angulo del hero ---- */
+let currentAngleKey = 'a';
 function setAngle(key){
+  currentAngleKey = key;
   const a = HERO_ANGLES[key];
   document.getElementById('hero-eyebrow').textContent = a.eyebrow;
   document.getElementById('hero-h1').textContent = a.h1;
@@ -553,12 +648,104 @@ function restoreOrder(){
 }
 
 /* ---- persistir texto editable ---- */
+function fieldKey(el){ return el.id || el.dataset.field; }
 function persistEditable(){
-  document.querySelectorAll('[contenteditable="true"][id]').forEach(el => {
-    const saved = localStorage.getItem('capitalarq_maqueta_text_' + el.id);
+  document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+    const key = fieldKey(el);
+    if (!key) return;
+    const saved = localStorage.getItem('capitalarq_maqueta_text_' + key);
     if (saved !== null) el.textContent = saved;
-    el.addEventListener('input', () => localStorage.setItem('capitalarq_maqueta_text_' + el.id, el.textContent));
+    el.addEventListener('input', () => localStorage.setItem('capitalarq_maqueta_text_' + key, el.textContent));
   });
+}
+
+/* ---- originales, para poder reportar exactamente que cambio Chris ---- */
+const ORIGINALS = {};
+const DEFAULT_ORDER = Array.from(document.querySelectorAll('#page-sections > section')).map(s => s.id);
+const DEFAULT_LOGO = 'revision_chris';
+const DEFAULT_ACCENT = 'azul';
+const DEFAULT_ANGLE = 'a';
+function captureOriginals(){
+  document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+    const key = fieldKey(el);
+    if (key) ORIGINALS[key] = el.textContent.trim();
+  });
+}
+
+function labelFor(el){ return el.dataset.label || el.id || fieldKey(el); }
+
+function buildDiffReport(){
+  const bloques = [];
+
+  document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+    const key = fieldKey(el);
+    if (!key) return;
+    const antes = (ORIGINALS[key] || '').trim();
+    const ahora = el.textContent.trim();
+    if (antes !== ahora) {
+      bloques.push(`[${labelFor(el)}]\nAntes: "${antes}"\nAhora: "${ahora}"`);
+    }
+  });
+
+  if (currentLogo !== DEFAULT_LOGO) {
+    bloques.push(`[Logo elegido]\n${LOGOS[DEFAULT_LOGO].label} → ${LOGOS[currentLogo].label}`);
+  }
+  if (currentAccent !== DEFAULT_ACCENT) {
+    bloques.push(`[Acento elegido]\n${ACCENTS[DEFAULT_ACCENT].label} → ${ACCENTS[currentAccent].label}`);
+  }
+  if (currentAngleKey !== DEFAULT_ANGLE) {
+    bloques.push(`[Ángulo del hero]\nSe cambió de la versión A a la versión B (o viceversa) — revisa los textos del hero arriba, ya reflejan la versión elegida.`);
+  }
+  const ordenActual = Array.from(document.querySelectorAll('#page-sections > section')).map(s => s.id);
+  if (JSON.stringify(ordenActual) !== JSON.stringify(DEFAULT_ORDER)) {
+    bloques.push(`[Orden de secciones]\nOriginal: ${DEFAULT_ORDER.join(' → ')}\nNuevo: ${ordenActual.join(' → ')}`);
+  }
+
+  const hasChanges = bloques.length > 0;
+  const fecha = new Date().toLocaleString('es-MX', { dateStyle:'full', timeStyle:'short' });
+  const encabezado = `Cambios de Chris — CapitalArq (sitio)\n${fecha}\n${'='.repeat(40)}\n\n`;
+  const texto = hasChanges ? encabezado + bloques.join('\n\n') : '';
+  return { hasChanges, texto };
+}
+
+function abrirModalCambios(){
+  const { hasChanges, texto } = buildDiffReport();
+  if (!hasChanges) {
+    alert('Todavía no hay cambios para mandar. Edita algún texto, logo, acento u orden de secciones primero.');
+    return;
+  }
+  document.getElementById('texto-cambios').value = texto;
+  document.getElementById('aviso-largo').classList.toggle('hidden', texto.length <= 1500);
+  document.getElementById('modal-cambios-fondo').classList.remove('hidden');
+}
+function cerrarModalCambios(){
+  document.getElementById('modal-cambios-fondo').classList.add('hidden');
+}
+function copiarResumenCambios(){
+  const texto = document.getElementById('texto-cambios').value;
+  const btn = document.getElementById('btn-copiar');
+  const marcarCopiado = () => { const orig = btn.textContent; btn.textContent = 'Copiado ✓'; setTimeout(() => btn.textContent = orig, 1800); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(texto).then(marcarCopiado).catch(() => copiarConFallback(texto, marcarCopiado));
+  } else {
+    copiarConFallback(texto, marcarCopiado);
+  }
+}
+function copiarConFallback(texto, onDone){
+  const ta = document.getElementById('texto-cambios');
+  ta.select();
+  try { document.execCommand('copy'); onDone(); } catch(e){ alert('No se pudo copiar automáticamente — selecciona el texto y copia con Ctrl/Cmd+C.'); }
+}
+function enviarResumenPorCorreo(){
+  const texto = document.getElementById('texto-cambios').value;
+  const asunto = encodeURIComponent('Cambios CapitalArq — sitio');
+  const cuerpo = encodeURIComponent(texto);
+  window.location.href = `mailto:knoxbass@gmail.com?subject=${asunto}&body=${cuerpo}`;
+}
+function toggleReviewPanel(){
+  const panel = document.getElementById('panel-revision');
+  panel.classList.toggle('collapsed');
+  document.getElementById('pr-caret').textContent = panel.classList.contains('collapsed') ? '▸' : '▾';
 }
 
 /* ---- revelado al hacer scroll ---- */
@@ -573,6 +760,30 @@ function setupReveal(){
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); } });
   }, { threshold: 0.15 });
   sections.forEach(s => io.observe(s));
+}
+
+/* ---- header con elevacion + texto con mascara fotografica, ambos ligados al scroll ---- */
+function initScrollEffects(){
+  const header = document.getElementById('site-header');
+  const maskEls = Array.from(document.querySelectorAll('.mask-foto'));
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let ticking = false;
+  function aplicar(){
+    header.classList.toggle('is-scrolled', window.scrollY > 8);
+    if (!reduce) {
+      maskEls.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const vh = window.innerHeight || 1;
+        const progreso = Math.min(1, Math.max(0, 1 - (rect.top / vh)));
+        el.style.backgroundPosition = 'center ' + (30 + progreso * 35) + '%';
+      });
+    }
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(aplicar); ticking = true; }
+  }, { passive:true });
+  aplicar();
 }
 
 function resetMaqueta(){
@@ -783,11 +994,15 @@ buildLogoOpts();
 buildAccentOpts();
 restoreOrder();
 addToolbars();
-persistEditable();
 setupReveal();
 setLogo(localStorage.getItem('capitalarq_maqueta_logo') || 'revision_chris');
 applyAccent(localStorage.getItem('capitalarq_maqueta_accent') || 'azul');
 setAngle(localStorage.getItem('capitalarq_maqueta_angle') || 'a');
+// el orden importa: los originales se capturan con el angulo ya aplicado,
+// y la restauracion de texto editado corre al final para que nada lo pise despues.
+captureOriginals();
+persistEditable();
+initScrollEffects();
 buildBoxes();
 buildCarousel();
 initCarouselInteraction();
