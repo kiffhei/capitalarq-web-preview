@@ -98,7 +98,11 @@
 
   /* ---- hero: reticula interactiva en tinta sobre papel ---- */
   #hero { padding:0; background:var(--bg); overflow:hidden; border-bottom:none; }
-  #servicios { background:var(--accent); border-bottom:none; transition:background var(--dur-in) var(--ease-out); } /* la reticula de nosotros se funde justo en este borde */
+  #servicios {
+    background-color:var(--accent);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    border-bottom:none; transition:background-color var(--dur-in) var(--ease-out);
+  } /* grano/ruido sutil tipo concreto — a proposito distinto de la reticula del resto del sitio */
   #servicios .kicker, #servicios h2 { color:#fff; }
   #hero .hero-inner { position:relative; z-index:2; padding:96px 24px; text-align:center; max-width:760px; margin:0 auto; pointer-events:none; }
   #hero .hero-inner [contenteditable], #hero .hero-inner .btn { pointer-events:auto; }
