@@ -201,6 +201,12 @@
   footer.site .wrap { position:relative; z-index:1; }
   footer.site h2 { font-size:26px; margin:0 0 18px; max-width:520px; }
   footer.site .btn-primario { background:var(--accent); color:#fff; }
+  .logo-slot--footer {
+    position:absolute; top:50%; right:0; transform:translateY(-50%);
+    height:76px; opacity:.92; pointer-events:none;
+  }
+  .logo-slot--footer svg, .logo-slot--footer img { height:76px; width:auto; max-width:300px; object-fit:contain; }
+  @media (max-width:900px){ .logo-slot--footer{ display:none; } }
   .footer-meta { margin-top:50px; padding-top:24px; border-top:1px solid rgba(255,255,255,.12); display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-size:12.5px; color:var(--footer-text-muted); }
 
   /* ---- panel de revisión ---- */
@@ -421,6 +427,7 @@
 
 <footer class="site">
   <div class="wrap">
+    <div class="logo-slot logo-slot--footer" id="logo-slot-footer"></div>
     <div class="kicker" style="color:#8fb8e0;">¿Tu obra está parada por un trámite?</div>
     <h2 contenteditable="true" data-field="footer-titulo" data-label="Pie de página · Título">Escríbenos y vemos qué necesita tu caso.</h2>
     <a class="btn btn-primario" contenteditable="true" href="#" data-field="footer-cta" data-label="Pie de página · Botón">Escríbenos por WhatsApp</a>
@@ -540,6 +547,26 @@ function setLogo(key){
   }, 120);
   document.querySelectorAll('#logo-opts button').forEach(b => b.classList.toggle('active', b.dataset.logo === key));
   localStorage.setItem('capitalarq_maqueta_logo', key);
+  renderFooterLogo();
+}
+
+/* ---- mismo logo del encabezado, en tinta clara para el fondo oscuro del cierre ---- */
+function invertirColoresLogo(svg){
+  return svg
+    .replaceAll('var(--text-muted)', 'var(--footer-text-muted)')
+    .replaceAll('var(--text)', 'var(--footer-text)')
+    .replaceAll('#07396F', '#5B9BD5')
+    .replaceAll('#B28028', '#D9A54A');
+}
+function renderFooterLogo(){
+  const slot = document.getElementById('logo-slot-footer');
+  if (!slot) return;
+  const item = LOGOS[currentLogo] || LOGOS['revision_chris'];
+  if (item.kind === 'img') {
+    slot.innerHTML = '<img src="' + item.src + '" alt="Logo de CapitalArq" style="filter:invert(1) brightness(1.05);">';
+  } else {
+    slot.innerHTML = invertirColoresLogo(item.svg);
+  }
 }
 function buildLogoOpts(){
   const box = document.getElementById('logo-opts');
