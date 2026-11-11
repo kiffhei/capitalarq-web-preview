@@ -143,30 +143,18 @@
   .flujo-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-top:30px; }
   .flujo-carousel {
     position:relative; height:420px; perspective:1200px; perspective-origin:50% 45%;
-    outline:none; user-select:none; -webkit-user-select:none; touch-action:pan-y; cursor:grab;
+    outline:none; user-select:none; -webkit-user-select:none;
   }
-  .flujo-carousel:active { cursor:grabbing; }
-  .flujo-carousel:focus-visible { outline:2px solid var(--accent); outline-offset:6px; border-radius:8px; }
   .flujo-carousel__stage { position:absolute; inset:0; transform-style:preserve-3d; }
   .flujo-carousel__card {
     position:absolute; top:50%; left:50%; width:230px; height:300px; border-radius:6px; overflow:hidden;
     background:var(--surface-2);
     box-shadow:0 24px 48px -18px rgba(20,23,26,.35), 0 6px 16px -8px rgba(20,23,26,.22);
-    transform-origin:center center; cursor:pointer;
+    transform-origin:center center;
     transition: transform 560ms var(--ease-out), opacity 560ms var(--ease-out), filter 560ms var(--ease-out);
   }
   .flujo-carousel__card img { width:100%; height:100%; object-fit:cover; display:block; pointer-events:none; -webkit-user-drag:none; }
   .flujo-carousel__tint { position:absolute; inset:0; background:var(--text); opacity:0; mix-blend-mode:multiply; pointer-events:none; transition:opacity 560ms var(--ease-out); }
-  .flujo-carousel__arrow {
-    position:absolute; top:50%; transform:translateY(-50%); z-index:20; width:34px; height:34px; border-radius:50%;
-    border:1px solid var(--border); background:var(--surface); color:var(--text); display:grid; place-items:center; cursor:pointer;
-    transition: background var(--dur-in) var(--ease-out), border-color var(--dur-in) var(--ease-out);
-  }
-  .flujo-carousel__arrow:hover { background:var(--accent-soft); border-color:var(--accent); }
-  .flujo-carousel__arrow--prev { left:2px; } .flujo-carousel__arrow--next { right:2px; }
-  .flujo-carousel__dots { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); z-index:20; display:flex; gap:7px; }
-  .flujo-carousel__dot { width:6px; height:6px; padding:0; border:none; border-radius:50%; background:var(--border); cursor:pointer; transition:width var(--dur-in) var(--ease-out), background var(--dur-in) var(--ease-out); }
-  .flujo-carousel__dot.is-active { width:18px; border-radius:4px; background:var(--accent); }
   @media (max-width:900px){ .flujo-layout{ grid-template-columns:1fr; } .flujo-carousel{ display:none; } }
   @media (prefers-reduced-motion: reduce){ .flujo-carousel__card{ transition:none; } }
   .paso {
@@ -377,15 +365,8 @@
         </div>
       </div>
       </div>
-      <div class="flujo-carousel" id="flujo-carousel" tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Fotos de nuestro trabajo">
+      <div class="flujo-carousel" id="flujo-carousel" role="img" aria-label="Fotos de nuestro trabajo, en rotación automática">
         <div class="flujo-carousel__stage" id="flujo-carousel-stage"></div>
-        <button type="button" class="flujo-carousel__arrow flujo-carousel__arrow--prev" aria-label="Foto anterior" onclick="carouselNav(-1)">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button type="button" class="flujo-carousel__arrow flujo-carousel__arrow--next" aria-label="Foto siguiente" onclick="carouselNav(1)">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="flujo-carousel__dots" id="flujo-carousel-dots"></div>
       </div>
     </div>
   </section>
@@ -498,8 +479,6 @@
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 const LOGOS = {
   original: {
@@ -641,7 +620,6 @@ function moveSection(id, dir){
 function saveOrder(){
   const order = Array.from(document.querySelectorAll('#page-sections > section')).map(s => s.id);
   localStorage.setItem('capitalarq_maqueta_order', JSON.stringify(order));
-  if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
 }
 function restoreOrder(){
   const raw = localStorage.getItem('capitalarq_maqueta_order');
@@ -754,8 +732,6 @@ function togglePreview(){
     el.setAttribute('contenteditable', on ? 'false' : 'true');
   });
   document.getElementById('btn-preview').textContent = on ? '✏️ Salir de vista previa' : '👁 Vista previa';
-  // ocultar el aviso/toolbars cambia la altura de la pagina: el hero-pin necesita recalcular
-  if (typeof ScrollTrigger !== 'undefined') setTimeout(() => ScrollTrigger.refresh(), 50);
 }
 
 function toggleReviewPanel(){
@@ -790,28 +766,6 @@ function initScrollEffects(){
     if (!ticking) { requestAnimationFrame(aplicar); ticking = true; }
   }, { passive:true });
   aplicar();
-}
-
-/* ---- hero: se queda fijo un momento mientras el contenido se desvanece
-   antes de soltar hacia "como trabajamos" — solo escritorio, respeta reduced-motion.
-   Tecnica tomada de aetherion.es (GSAP ScrollTrigger con pin + scrub). */
-function initHeroPin(){
-  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (window.innerWidth < 900) return;
-  gsap.registerPlugin(ScrollTrigger);
-  const heroInner = document.querySelector('#hero .hero-inner');
-  gsap.timeline({
-    scrollTrigger: {
-      trigger: '#hero',
-      start: 'top top',
-      end: '+=55%',
-      scrub: 0.6,
-      pin: true,
-      pinSpacing: true,
-      id: 'hero-pin'
-    }
-  }).fromTo(heroInner, { opacity: 1, y: 0 }, { opacity: 0, y: -40, ease: 'none' });
 }
 
 function resetMaqueta(){
@@ -892,23 +846,18 @@ const CAROUSEL_IMAGES = [
 const carouselCfg = { depth:112, spread:46, tilt:16, visibleCards:3, falloff:0.28, blurMax:5, tintMax:0.55, autoplayDelay:3600 };
 let carouselFocus = 0;
 let carouselTimer = null;
-let carouselHover = false;
-let carouselJustDragged = false;
 let carouselReducedMotion = false;
 
 function buildCarousel(){
   const stage = document.getElementById('flujo-carousel-stage');
-  const dotsWrap = document.getElementById('flujo-carousel-dots');
-  if (!stage || !dotsWrap) return;
+  if (!stage) return;
   carouselReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   stage.innerHTML = '';
-  dotsWrap.innerHTML = '';
   CAROUSEL_IMAGES.forEach((item, i) => {
     const card = document.createElement('div');
     card.className = 'flujo-carousel__card';
     card.setAttribute('aria-roledescription', 'diapositiva');
     card.setAttribute('aria-label', (i + 1) + ' de ' + CAROUSEL_IMAGES.length);
-    card.addEventListener('click', () => { if (!carouselJustDragged) setCarouselFocus(i); });
     const img = document.createElement('img');
     img.src = item.src; img.alt = item.alt; img.draggable = false;
     img.onerror = () => { card.style.display = 'none'; };
@@ -917,13 +866,6 @@ function buildCarousel(){
     card.appendChild(img);
     card.appendChild(tint);
     stage.appendChild(card);
-
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.className = 'flujo-carousel__dot';
-    dot.setAttribute('aria-label', 'Ir a la foto ' + (i + 1));
-    dot.addEventListener('click', () => { setCarouselFocus(i); startCarouselAutoplay(); });
-    dotsWrap.appendChild(dot);
   });
   layoutCarousel();
   startCarouselAutoplay();
@@ -931,7 +873,6 @@ function buildCarousel(){
 
 function layoutCarousel(){
   const cards = document.querySelectorAll('#flujo-carousel-stage .flujo-carousel__card');
-  const dots = document.querySelectorAll('#flujo-carousel-dots .flujo-carousel__dot');
   const n = cards.length;
   if (!n) return;
   cards.forEach((card, i) => {
@@ -954,12 +895,11 @@ function layoutCarousel(){
     card.style.opacity = opacity.toFixed(3);
     card.style.filter = 'brightness(' + brightness.toFixed(3) + ') blur(' + blur.toFixed(2) + 'px)';
     card.style.zIndex = String(zi);
-    card.style.pointerEvents = shown && opacity > 0.05 ? 'auto' : 'none';
+    card.style.pointerEvents = 'none';
     card.setAttribute('aria-hidden', d === 0 ? 'false' : 'true');
     const tintEl = card.querySelector('.flujo-carousel__tint');
     if (tintEl) tintEl.style.opacity = Math.min(carouselCfg.tintMax, back * carouselCfg.falloff * 1.3).toFixed(3);
   });
-  dots.forEach((dot, i) => dot.classList.toggle('is-active', i === carouselFocus));
 }
 
 function setCarouselFocus(i){
@@ -968,53 +908,12 @@ function setCarouselFocus(i){
   layoutCarousel();
 }
 
-function carouselNav(step){
-  setCarouselFocus(carouselFocus + step);
-  startCarouselAutoplay();
-}
-
 function startCarouselAutoplay(){
   clearInterval(carouselTimer);
   if (carouselReducedMotion || CAROUSEL_IMAGES.length < 2) return;
   carouselTimer = setInterval(() => {
-    if (!carouselHover) setCarouselFocus(carouselFocus + 1);
+    setCarouselFocus(carouselFocus + 1);
   }, carouselCfg.autoplayDelay);
-}
-
-function initCarouselInteraction(){
-  const el = document.getElementById('flujo-carousel');
-  if (!el) return;
-  let dragState = null;
-  el.addEventListener('pointerdown', e => {
-    dragState = { x: e.clientX, moved: false, id: e.pointerId };
-  });
-  el.addEventListener('pointermove', e => {
-    if (!dragState) return;
-    const dx = e.clientX - dragState.x;
-    if (!dragState.moved && Math.abs(dx) > 6) {
-      dragState.moved = true;
-      el.setPointerCapture(dragState.id);
-    }
-  });
-  el.addEventListener('pointerup', e => {
-    if (!dragState) return;
-    const dx = e.clientX - dragState.x;
-    if (dragState.moved) {
-      carouselJustDragged = true;
-      setTimeout(() => { carouselJustDragged = false; }, 80);
-      if (dx < -40) carouselNav(1);
-      else if (dx > 40) carouselNav(-1);
-    }
-    dragState = null;
-  });
-  el.addEventListener('mouseenter', () => { carouselHover = true; });
-  el.addEventListener('mouseleave', () => { carouselHover = false; });
-  el.addEventListener('focusin', () => { carouselHover = true; });
-  el.addEventListener('focusout', () => { carouselHover = false; });
-  el.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft') { e.preventDefault(); carouselNav(-1); }
-    else if (e.key === 'ArrowRight') { e.preventDefault(); carouselNav(1); }
-  });
 }
 
 /* ---- init ---- */
@@ -1031,10 +930,8 @@ setAngle(localStorage.getItem('capitalarq_maqueta_angle') || 'a');
 captureOriginals();
 persistEditable();
 initScrollEffects();
-initHeroPin();
 buildBoxes();
 buildCarousel();
-initCarouselInteraction();
 </script>
 
 </body>
