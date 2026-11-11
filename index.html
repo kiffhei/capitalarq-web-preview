@@ -507,15 +507,15 @@ const LOGOS = {
   ronda2_monograma: {
     label: "Ronda 2 — monograma",
     kind: "svg",
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 250"><g transform="translate(210,-6) scale(1.55)"><line x1="55" y1="109" x2="145" y2="109" stroke="var(--text)" stroke-width="2.2"/><polygon points="77,109 77,66 98,27 98,109" fill="none" stroke="var(--text)" stroke-width="2.6"/><polygon points="104,109 104,95 105,20 105,109" fill="none" stroke="var(--accent)" stroke-width="2.6"/></g><text x="16" y="200" font-family="'Baloo 2',sans-serif" font-weight="700" font-size="52" fill="var(--text)">Capitalarq</text><text x="17" y="228" font-family="'IBM Plex Mono',monospace" font-weight="500" letter-spacing="2.2" font-size="14" fill="var(--text-muted)">PROTECCIÓN CIVIL Y ARQUITECTURA</text></svg>`
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 250"><g transform="translate(210,-6) scale(1.55)"><line x1="55" y1="109" x2="145" y2="109" stroke="var(--text)" stroke-width="2.2"/><polygon points="77,109 77,66 98,27 98,109" fill="none" stroke="#07396F" stroke-width="2.6"/><polygon points="104,109 104,95 105,20 105,109" fill="none" stroke="#B28028" stroke-width="2.6"/></g><text x="16" y="200" font-family="'Baloo 2',sans-serif" font-weight="700" font-size="52" fill="var(--text)">Capitalarq</text><text x="17" y="228" font-family="'IBM Plex Mono',monospace" font-weight="500" letter-spacing="2.2" font-size="14" fill="var(--text-muted)">PROTECCIÓN CIVIL Y ARQUITECTURA</text></svg>`
   }
 };
 
 const ACCENTS = {
-  azul:    { label:"Azul",    swatch:"#1E5F9E", value:"#1E5F9E", soft:"#E8F0F8" },
-  naranja: { label:"Naranja (chaleco)", swatch:"#D9560C", value:"#D9560C", soft:"#FCE7DA" },
-  mostaza: { label:"Mostaza", swatch:"#B8862E", value:"#B8862E", soft:"#F5EAD3" },
-  oxford:  { label:"Gris Oxford (escala de grises)", swatch:"#43494F", value:"#43494F", soft:"#E9EAEC" }
+  azul:    { label:"Azul",    swatch:"#1E5F9E", value:"#1E5F9E", soft:"#E8F0F8", detail2:"#B8862E" },
+  naranja: { label:"Naranja (chaleco)", swatch:"#D9560C", value:"#D9560C", soft:"#FCE7DA", detail2:"#1E5F9E" },
+  mostaza: { label:"Mostaza", swatch:"#B8862E", value:"#B8862E", soft:"#F5EAD3", detail2:"#43494F" },
+  oxford:  { label:"Gris Oxford (escala de grises)", swatch:"#43494F", value:"#43494F", soft:"#E9EAEC", detail2:"#D9560C" }
 };
 
 const HERO_ANGLES = {
@@ -547,7 +547,8 @@ function setLogo(key){
     if (item.kind === 'img') {
       slot.innerHTML = '<img src="'+item.src+'" alt="Logo original de CapitalArq">';
     } else {
-      slot.innerHTML = item.svg;
+      const { d1, d2 } = coloresDetalleLogo();
+      slot.innerHTML = aplicarColoresDetalle(item.svg, d1, d2);
     }
     slot.style.opacity = 1;
   }, 120);
@@ -557,13 +558,28 @@ function setLogo(key){
 }
 
 /* ---- mismo logo del encabezado, en tinta clara para el fondo oscuro del cierre ---- */
-function invertirColoresLogo(svg){
-  return svg
-    .replaceAll('var(--text-muted)', 'var(--footer-text-muted)')
-    .replaceAll('var(--text)', 'var(--footer-text)')
-    .replaceAll('#07396F', '#5B9BD5')
-    .replaceAll('#B28028', '#D9A54A');
+function aclararHex(hex, amount){
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
+  const mix = (c) => Math.round(c + (255 - c) * amount);
+  return '#' + [mix(r), mix(g), mix(b)].map(v => v.toString(16).padStart(2, '0')).join('');
 }
+/* el logo siempre lleva dos colores de detalle — siguen al acento elegido en el panel */
+function coloresDetalleLogo(){
+  const a = ACCENTS[currentAccent] || ACCENTS.azul;
+  return { d1: a.value, d2: a.detail2 };
+}
+function aplicarColoresDetalle(svg, d1, d2){
+  return svg.replaceAll('#B28028', d1).replaceAll('#07396F', d2);
+}
+function invertirColoresLogo(svg){
+  const { d1, d2 } = coloresDetalleLogo();
+  const base = svg
+    .replaceAll('var(--text-muted)', 'var(--footer-text-muted)')
+    .replaceAll('var(--text)', 'var(--footer-text)');
+  return aplicarColoresDetalle(base, aclararHex(d1, .22), aclararHex(d2, .22));
+}
+let logoDrawObserver = null;
 function renderFooterLogo(){
   const slot = document.getElementById('logo-slot-footer');
   if (!slot) return;
@@ -573,6 +589,49 @@ function renderFooterLogo(){
   } else {
     slot.innerHTML = invertirColoresLogo(item.svg);
   }
+  if (logoDrawObserver) logoDrawObserver.disconnect();
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  logoDrawObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animarEntradaLogo(slot, item.kind);
+        logoDrawObserver.disconnect();
+      }
+    });
+  }, { threshold: .4 });
+  logoDrawObserver.observe(slot);
+}
+
+/* ---- el logo del cierre "se dibuja" con sus trazos al entrar en pantalla, una sola vez ---- */
+function animarEntradaLogo(root, kind){
+  if (kind === 'img') {
+    const img = root.querySelector('img');
+    if (!img) return;
+    img.style.opacity = '0';
+    img.style.transform = 'translateY(14px)';
+    img.style.transition = 'opacity 600ms cubic-bezier(.4,0,.2,1), transform 600ms cubic-bezier(.4,0,.2,1)';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      img.style.opacity = '1';
+      img.style.transform = 'translateY(0)';
+    }));
+    return;
+  }
+  const trazos = root.querySelectorAll('polyline, line, polygon');
+  const textos = root.querySelectorAll('text');
+  trazos.forEach((el, i) => {
+    const largo = el.getTotalLength ? el.getTotalLength() : 0;
+    if (!largo) return;
+    el.style.strokeDasharray = largo;
+    el.style.strokeDashoffset = largo;
+    el.style.transition = 'stroke-dashoffset 900ms cubic-bezier(.4,0,.2,1) ' + (i * 70) + 'ms';
+    requestAnimationFrame(() => requestAnimationFrame(() => { el.style.strokeDashoffset = '0'; }));
+  });
+  const retraso = trazos.length * 70 + 400;
+  textos.forEach(t => {
+    t.style.opacity = '0';
+    t.style.transition = 'opacity 500ms ease-out ' + retraso + 'ms';
+    requestAnimationFrame(() => requestAnimationFrame(() => { t.style.opacity = '1'; }));
+  });
 }
 function buildLogoOpts(){
   const box = document.getElementById('logo-opts');
@@ -595,6 +654,8 @@ function applyAccent(key){
   document.documentElement.style.setProperty('--accent-soft', a.soft);
   document.querySelectorAll('.swatch').forEach(s => s.classList.toggle('active', s.dataset.accent === key));
   localStorage.setItem('capitalarq_maqueta_accent', key);
+  setLogo(currentLogo);
+  renderFooterLogo();
 }
 function buildAccentOpts(){
   const box = document.getElementById('accent-opts');
