@@ -183,21 +183,31 @@
   .card-servicio p { font-size:13.5px; color:var(--text-muted); margin:0; }
   @media (max-width:820px){ .servicios-grid{ grid-template-columns:1fr; } }
 
-  /* ---- proceso (declaracion de seguimiento) ---- */
-  #proceso { position:relative; overflow:hidden; background:var(--bg); }
-  .proceso-marca-fondo {
-    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    width:min(66vw, 720px); height:auto; color:var(--text); opacity:.06; z-index:0; pointer-events:none;
-  }
-  #proceso .wrap { position:relative; z-index:1; }
+  /* ---- proceso: declaracion + rastreador de etapas (la promesa de "te mantenemos informado", visualizada) ---- */
+  #proceso { position:relative; background:var(--surface-2); }
   .proceso-statement {
     font-size:28px; font-weight:600; line-height:1.35; max-width:760px; margin:14px auto 0;
-    color:var(--text); text-wrap:balance;
+    color:var(--text); text-wrap:balance; text-align:center;
   }
   @media (max-width:600px){ .proceso-statement{ font-size:21px; } }
-  .proceso-puntos { display:flex; justify-content:center; gap:28px; flex-wrap:wrap; margin-top:34px; pointer-events:none; }
-  .proceso-punto { display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; color:var(--text-muted); }
-  .proceso-punto svg { width:18px; height:18px; color:var(--accent); flex:0 0 auto; }
+
+  .proceso-tracker { position:relative; max-width:820px; margin:54px auto 0; }
+  .proceso-tracker__linea { position:absolute; top:15px; left:44px; right:44px; height:2px; background:var(--border); }
+  .proceso-tracker__avance { position:absolute; top:0; left:0; height:100%; width:0%; background:var(--accent); transition:width 1300ms cubic-bezier(.4,0,.2,1); }
+  .proceso-tracker__etapas { position:relative; display:flex; justify-content:space-between; gap:10px; }
+  .etapa { display:flex; flex-direction:column; align-items:center; gap:12px; max-width:150px; text-align:center; }
+  .etapa__nodo {
+    width:32px; height:32px; border-radius:50%; background:var(--surface); border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--text-muted);
+    transition:border-color 500ms var(--ease-out), color 500ms var(--ease-out), background 500ms var(--ease-out), transform 500ms var(--ease-out);
+  }
+  .etapa.is-activa .etapa__nodo { border-color:var(--accent); background:var(--accent); color:#fff; transform:scale(1.08); }
+  .etapa__label { font-size:12.5px; color:var(--text-muted); font-weight:600; line-height:1.3; }
+  @media (max-width:760px){
+    .proceso-tracker__linea{ display:none; }
+    .proceso-tracker__etapas{ flex-direction:column; align-items:flex-start; gap:22px; }
+    .etapa{ flex-direction:row; max-width:none; text-align:left; }
+  }
 
   /* ---- nosotros ---- */
   #nosotros { position:relative; overflow:hidden; }
@@ -211,6 +221,10 @@
     color:var(--text-muted); font-size:12.5px; text-align:center; gap:8px; padding:20px;
   }
   @media (max-width:760px){ .nosotros-grid{ grid-template-columns:1fr; } }
+  .nosotros-copy {
+    background:var(--surface); border-radius:10px; padding:30px 34px;
+    box-shadow:0 10px 30px rgba(20,23,26,.06); border:1px solid var(--border);
+  }
 
   /* ---- footer ---- */
   footer.site { position:relative; background:var(--footer-bg); color:var(--footer-text); padding:64px 0 30px; overflow:hidden; transition:background var(--dur-in) var(--ease-out); }
@@ -427,22 +441,17 @@
   </section>
 
   <section id="proceso">
-    <svg class="proceso-marca-fondo" viewBox="0 0 130 120" aria-hidden="true" fill="none" stroke-linecap="square" stroke-linejoin="miter">
-      <polyline points="14,110 14,69.3" stroke="currentColor" stroke-width="1.4"/>
-      <polyline points="14,69.3 35.7,86.5 35.7,110" stroke="currentColor" stroke-width="1.4"/>
-      <polyline points="26.2,72.4 54.8,49.8 54.8,110" stroke="currentColor" stroke-width="1.4"/>
-      <polyline points="63.8,110 63.8,38 94.2,63.4 94.2,76.0" stroke="currentColor" stroke-width="1.4"/>
-      <polyline points="86.0,110 86.0,86.0 109.1,69.3" stroke="currentColor" stroke-width="1.4"/>
-      <polyline points="109.1,69.3 109.1,110" stroke="currentColor" stroke-width="1.4"/>
-      <line x1="8" y1="110" x2="118" y2="110" stroke="currentColor" stroke-width="1.4"/>
-    </svg>
-    <div class="wrap reveal" style="text-align:center;pointer-events:none;">
-      <div class="kicker">Seguimiento puntual</div>
-      <p class="proceso-statement" contenteditable="true" style="pointer-events:auto;" data-field="proceso-texto" data-label="Seguimiento · Declaración">Integramos cada expediente, coordinamos los requisitos y damos seguimiento a los trámites ante las autoridades correspondientes, manteniéndote informado sobre cada etapa del proceso.</p>
-      <div class="proceso-puntos">
-        <div class="proceso-punto"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Integración del expediente</div>
-        <div class="proceso-punto"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Coordinación de requisitos</div>
-        <div class="proceso-punto"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Seguimiento ante autoridades</div>
+    <div class="wrap reveal">
+      <div class="kicker" style="text-align:center;">Seguimiento puntual</div>
+      <p class="proceso-statement" contenteditable="true" data-field="proceso-texto" data-label="Seguimiento · Declaración">Integramos cada expediente, coordinamos los requisitos y damos seguimiento a los trámites ante las autoridades correspondientes, manteniéndote informado sobre cada etapa del proceso.</p>
+      <div class="proceso-tracker" id="proceso-tracker">
+        <div class="proceso-tracker__linea"><div class="proceso-tracker__avance" id="proceso-avance"></div></div>
+        <div class="proceso-tracker__etapas">
+          <div class="etapa"><span class="etapa__nodo">1</span><span class="etapa__label">Expediente integrado</span></div>
+          <div class="etapa"><span class="etapa__nodo">2</span><span class="etapa__label">Requisitos coordinados</span></div>
+          <div class="etapa"><span class="etapa__nodo">3</span><span class="etapa__label">Ante la autoridad</span></div>
+          <div class="etapa"><span class="etapa__nodo">4</span><span class="etapa__label">Te mantenemos informado</span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -455,7 +464,7 @@
         <span style="font-size:26px;">👤</span>
         <span>Foto de Chris pendiente — se integra cuando la comparta</span>
       </div>
-      <div>
+      <div class="nosotros-copy">
         <div class="kicker">Nosotros</div>
         <h2 style="margin:8px 0 12px;font-size:29px;" contenteditable="true" data-field="nosotros-titulo" data-label="Nosotros · Título">Quién responde cuando algo se atora</h2>
         <p contenteditable="true" style="font-size:17px;color:var(--text-muted);max-width:520px;" data-field="nosotros-texto-1" data-label="Nosotros · Texto 1">En CapitalArq, cada proyecto cuenta con atención directa de su CEO: el Arq. Christhian Jair Cruz Ruiz, Director Responsable de Obra registrado ante la Ciudad de México.</p>
@@ -901,6 +910,28 @@ function initScrollEffects(){
   aplicar();
 }
 
+/* ---- rastreador de "proceso": la barra avanza y las etapas se encienden una sola vez, al entrar en pantalla ---- */
+function initProcesoTracker(){
+  const tracker = document.getElementById('proceso-tracker');
+  if (!tracker) return;
+  const avance = document.getElementById('proceso-avance');
+  const etapas = tracker.querySelectorAll('.etapa');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    avance.style.width = '100%';
+    etapas.forEach(e => e.classList.add('is-activa'));
+    return;
+  }
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      avance.style.width = '100%';
+      etapas.forEach((e, i) => setTimeout(() => e.classList.add('is-activa'), 200 + i * 260));
+      obs.disconnect();
+    });
+  }, { threshold: .5 });
+  obs.observe(tracker);
+}
+
 function resetMaqueta(){
   Object.keys(localStorage).filter(k => k.startsWith('capitalarq_maqueta_')).forEach(k => localStorage.removeItem(k));
   location.reload();
@@ -1063,6 +1094,7 @@ setAngle(localStorage.getItem('capitalarq_maqueta_angle') || 'a');
 captureOriginals();
 persistEditable();
 initScrollEffects();
+initProcesoTracker();
 buildBoxes();
 buildCarousel();
 </script>
