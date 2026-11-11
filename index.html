@@ -95,7 +95,7 @@
 
   /* ---- hero: reticula interactiva en tinta sobre papel ---- */
   #hero { padding:0; background:var(--bg); overflow:hidden; border-bottom:none; }
-  #servicios { border-bottom:none; } /* la reticula de nosotros se funde justo en este borde */
+  #servicios { background:var(--accent-soft); border-bottom:none; transition:background var(--dur-in) var(--ease-out); } /* la reticula de nosotros se funde justo en este borde */
   #hero .hero-inner { position:relative; z-index:2; padding:96px 24px; text-align:center; max-width:760px; margin:0 auto; pointer-events:none; }
   #hero .hero-inner [contenteditable], #hero .hero-inner .btn { pointer-events:auto; }
   .boxes-wrap { position:absolute; inset:0; z-index:0; overflow:hidden; }
@@ -191,18 +191,20 @@
   }
   @media (max-width:600px){ .proceso-statement{ font-size:21px; } }
 
-  .proceso-tracker { position:relative; max-width:820px; margin:54px auto 0; }
-  .proceso-tracker__linea { position:absolute; top:15px; left:44px; right:44px; height:2px; background:var(--border); }
+  .proceso-tracker { position:relative; max-width:860px; margin:54px auto 0; }
+  /* la linea va de centro a centro del nodo 1 al nodo 4: con 4 columnas iguales esos centros
+     caen siempre en 12.5% y 87.5% del ancho, sin importar que tan largo sea cada texto */
+  .proceso-tracker__linea { position:absolute; top:17px; left:12.5%; right:12.5%; height:2px; background:var(--border); }
   .proceso-tracker__avance { position:absolute; top:0; left:0; height:100%; width:0%; background:var(--accent); transition:width 1300ms cubic-bezier(.4,0,.2,1); }
-  .proceso-tracker__etapas { position:relative; display:flex; justify-content:space-between; gap:10px; }
-  .etapa { display:flex; flex-direction:column; align-items:center; gap:12px; max-width:150px; text-align:center; }
+  .proceso-tracker__etapas { position:relative; display:flex; gap:10px; }
+  .etapa { display:flex; flex-direction:column; align-items:center; gap:14px; flex:1 1 0; min-width:0; text-align:center; }
   .etapa__nodo {
-    width:32px; height:32px; border-radius:50%; background:var(--surface); border:2px solid var(--border);
-    display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--text-muted);
+    width:36px; height:36px; border-radius:50%; background:var(--surface); border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:var(--text-muted);
     transition:border-color 500ms var(--ease-out), color 500ms var(--ease-out), background 500ms var(--ease-out), transform 500ms var(--ease-out);
   }
   .etapa.is-activa .etapa__nodo { border-color:var(--accent); background:var(--accent); color:#fff; transform:scale(1.08); }
-  .etapa__label { font-size:12.5px; color:var(--text-muted); font-weight:600; line-height:1.3; }
+  .etapa__label { font-size:16px; color:var(--text); font-weight:700; line-height:1.3; }
   @media (max-width:760px){
     .proceso-tracker__linea{ display:none; }
     .proceso-tracker__etapas{ flex-direction:column; align-items:flex-start; gap:22px; }
@@ -638,20 +640,28 @@ function renderFooterLogo(){
     slot.innerHTML = invertirColoresLogo(item.svg);
   }
   if (logoDrawObserver) logoDrawObserver.disconnect();
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   logoDrawObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        animarEntradaLogo(slot, item.kind);
+        animarEntradaLogo(slot, item.kind, reduce);
         logoDrawObserver.disconnect();
       }
     });
-  }, { threshold: .4 });
+  }, { threshold: 0 });
   logoDrawObserver.observe(slot);
 }
 
-/* ---- el logo del cierre "se dibuja" con sus trazos al entrar en pantalla, una sola vez ---- */
-function animarEntradaLogo(root, kind){
+/* ---- el logo del cierre "se dibuja" con sus trazos al entrar en pantalla, una sola vez.
+   Incluso con "reducir movimiento" activado se hace un fade corto — nunca se queda sin
+   ninguna transicion, para que sea evidente que algo paso. ---- */
+function animarEntradaLogo(root, kind, reduce){
+  if (reduce) {
+    root.style.opacity = '0';
+    root.style.transition = 'opacity 350ms ease-out';
+    requestAnimationFrame(() => requestAnimationFrame(() => { root.style.opacity = '1'; }));
+    return;
+  }
   if (kind === 'img') {
     const img = root.querySelector('img');
     if (!img) return;
