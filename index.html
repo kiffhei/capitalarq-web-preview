@@ -199,14 +199,16 @@
   /* ---- footer ---- */
   footer.site { position:relative; background:var(--footer-bg); color:var(--footer-text); padding:64px 0 30px; overflow:hidden; transition:background var(--dur-in) var(--ease-out); }
   footer.site .wrap { position:relative; z-index:1; }
+  .footer-top { display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:24px; }
+  .footer-copy { max-width:520px; }
   footer.site h2 { font-size:26px; margin:0 0 18px; max-width:520px; }
   footer.site .btn-primario { background:var(--accent); color:#fff; }
   .logo-slot--footer {
-    position:absolute; top:50%; right:0; transform:translateY(-50%);
-    height:76px; opacity:.92; pointer-events:none;
+    display:flex; align-items:center; justify-content:center;
+    height:230px; opacity:.95; pointer-events:none;
   }
-  .logo-slot--footer svg, .logo-slot--footer img { height:76px; width:auto; max-width:300px; object-fit:contain; }
-  @media (max-width:900px){ .logo-slot--footer{ display:none; } }
+  .logo-slot--footer svg, .logo-slot--footer img { height:230px; width:auto; max-width:520px; object-fit:contain; }
+  @media (max-width:900px){ .footer-top{ grid-template-columns:1fr; } .logo-slot--footer{ display:none; } }
   .footer-meta { margin-top:50px; padding-top:24px; border-top:1px solid rgba(255,255,255,.12); display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-size:12.5px; color:var(--footer-text-muted); }
 
   /* ---- panel de revisión ---- */
@@ -427,10 +429,14 @@
 
 <footer class="site">
   <div class="wrap">
-    <div class="logo-slot logo-slot--footer" id="logo-slot-footer"></div>
-    <div class="kicker" style="color:#8fb8e0;">¿Tu obra está parada por un trámite?</div>
-    <h2 contenteditable="true" data-field="footer-titulo" data-label="Pie de página · Título">Escríbenos y vemos qué necesita tu caso.</h2>
-    <a class="btn btn-primario" contenteditable="true" href="#" data-field="footer-cta" data-label="Pie de página · Botón">Escríbenos por WhatsApp</a>
+    <div class="footer-top">
+      <div class="footer-copy">
+        <div class="kicker" style="color:#8fb8e0;">¿Tu obra está parada por un trámite?</div>
+        <h2 contenteditable="true" data-field="footer-titulo" data-label="Pie de página · Título">Escríbenos y vemos qué necesita tu caso.</h2>
+        <a class="btn btn-primario" contenteditable="true" href="#" data-field="footer-cta" data-label="Pie de página · Botón">Escríbenos por WhatsApp</a>
+      </div>
+      <div class="logo-slot logo-slot--footer" id="logo-slot-footer"></div>
+    </div>
     <div class="footer-meta">
       <div>CapitalArq — Protección Civil y Arquitectura</div>
       <div>Instagram: <a href="https://instagram.com/capitalarq" target="_blank" style="color:#8fb8e0;">@capitalarq</a></div>
