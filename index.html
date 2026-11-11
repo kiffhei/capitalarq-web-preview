@@ -800,7 +800,7 @@ function persistEditable(){
 const ORIGINALS = {};
 const DEFAULT_ORDER = Array.from(document.querySelectorAll('#page-sections > section')).map(s => s.id);
 const DEFAULT_LOGO = 'revision_chris';
-const DEFAULT_ACCENT = 'azul';
+const DEFAULT_ACCENT = 'mostaza';
 const DEFAULT_ANGLE = 'a';
 function captureOriginals(){
   document.querySelectorAll('[contenteditable="true"]').forEach(el => {
@@ -1098,7 +1098,7 @@ restoreOrder();
 addToolbars();
 setupReveal();
 setLogo(localStorage.getItem('capitalarq_maqueta_logo') || 'revision_chris');
-applyAccent(localStorage.getItem('capitalarq_maqueta_accent') || 'azul');
+applyAccent(localStorage.getItem('capitalarq_maqueta_accent') || 'mostaza');
 setAngle(localStorage.getItem('capitalarq_maqueta_angle') || 'a');
 // el orden importa: los originales se capturan con el angulo ya aplicado,
 // y la restauracion de texto editado corre al final para que nada lo pise despues.
