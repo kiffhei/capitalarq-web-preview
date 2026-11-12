@@ -187,20 +187,33 @@
   @media (max-width:500px){ .flujo-grid{ grid-template-columns:1fr; } }
 
   /* ---- servicios ---- */
-  .servicios-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin-top:30px; }
+  .servicios-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:30px; align-items:start; }
   @media (max-width:980px){ .servicios-grid{ grid-template-columns:repeat(2,1fr); } }
-  .card-servicio {
-    border:1px solid var(--border); border-radius:6px; overflow:hidden; background:var(--surface);
-    transition: transform var(--dur-in) var(--ease-out), box-shadow var(--dur-in) var(--ease-out), border-color var(--dur-in) var(--ease-out);
-  }
-  .card-servicio:hover { transform:translateY(-5px); box-shadow:0 16px 30px rgba(0,0,0,.1); border-color:var(--accent); }
-  .card-servicio .foto { aspect-ratio:16/10; background:var(--surface-2); overflow:hidden; }
-  .card-servicio .foto img { width:100%; height:100%; object-fit:cover; transition:transform 500ms var(--ease-out); }
-  .card-servicio:hover .foto img { transform:scale(1.06); }
-  .card-servicio .body { padding:18px 18px 20px; }
-  .card-servicio h3 { font-size:16px; margin:0 0 8px; }
-  .card-servicio p { font-size:13.5px; color:var(--text-muted); margin:0; }
   @media (max-width:820px){ .servicios-grid{ grid-template-columns:1fr; } }
+  .card-servicio {
+    border:1px solid var(--border); border-radius:8px; overflow:hidden; background:var(--surface); cursor:pointer;
+    transition: box-shadow var(--dur-in) var(--ease-out), border-color var(--dur-in) var(--ease-out);
+  }
+  .card-servicio:hover, .card-servicio:focus-visible { box-shadow:0 14px 28px rgba(20,23,26,.1); border-color:var(--accent); outline:none; }
+  .card-servicio__cabeza { display:flex; align-items:center; gap:13px; padding:14px 18px; }
+  .card-servicio__foto { flex:0 0 auto; width:48px; height:48px; border-radius:7px; overflow:hidden; background:var(--surface-2); }
+  .card-servicio__foto img { width:100%; height:100%; object-fit:cover; display:block; }
+  .card-servicio__cabeza h3 { font-size:15.5px; margin:0; flex:1 1 auto; line-height:1.3; }
+  .card-servicio__flecha { flex:0 0 auto; font-size:12px; color:var(--text-muted); transition:transform var(--dur-in) var(--ease-out); }
+  .card-servicio__detalle { max-height:0; opacity:0; overflow:hidden; padding:0 18px; transition:max-height var(--dur-in) var(--ease-out), opacity var(--dur-in) var(--ease-out), padding var(--dur-in) var(--ease-out); }
+  .card-servicio__detalle ul { margin:0; padding:0; list-style:none; }
+  .card-servicio__detalle li { display:flex; align-items:flex-start; gap:8px; font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:8px; }
+  .card-servicio__item-icono { flex:0 0 auto; width:16px; height:16px; margin-top:1px; color:var(--accent); }
+  .card-servicio__item-icono svg { width:100%; height:100%; }
+  .card-servicio__nota { font-size:12px; color:var(--text-muted); margin:8px 0 0; font-style:italic; opacity:.85; }
+  .card-servicio.is-abierto .card-servicio__detalle,
+  .card-servicio:focus-visible .card-servicio__detalle { max-height:320px; opacity:1; padding:0 18px 18px; }
+  .card-servicio.is-abierto .card-servicio__flecha,
+  .card-servicio:focus-visible .card-servicio__flecha { transform:rotate(180deg); }
+  @media (hover:hover) {
+    .card-servicio:hover .card-servicio__detalle { max-height:320px; opacity:1; padding:0 18px 18px; }
+    .card-servicio:hover .card-servicio__flecha { transform:rotate(180deg); }
+  }
 
   /* ---- proceso: declaracion + rastreador de etapas (la promesa de "te mantenemos informado", visualizada) ---- */
   #proceso { position:relative; background:var(--surface-2); }
@@ -449,32 +462,60 @@
       <div class="kicker" contenteditable="true" data-field="servicios-kicker" data-label="Servicios · Etiqueta">Servicios</div>
       <h2 style="margin:8px 0 0;font-size:26px;" contenteditable="true" data-field="servicios-titulo" data-label="Servicios · Título de sección">En qué te acompañamos</h2>
       <div class="servicios-grid">
-        <div class="card-servicio">
-          <div class="foto"><img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=700&q=60" alt="Planos arquitectónicos" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
-          <div class="body">
-            <h3 contenteditable="true" data-field="servicio-1-titulo" data-label="Servicios · Tarjeta 1 · Título">Licencias de construcción</h3>
-            <p contenteditable="true" data-field="servicio-1-texto" data-label="Servicios · Tarjeta 1 · Texto">Registros de Manifestaciones de Construcción (A, B y C) y licencias de construcción especial (Demoliciones, tapiales, instalaciones subterráneas, etc.), integradas y gestionadas de principio a fin.</p>
+        <div class="card-servicio" onclick="toggleServicio(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="card-servicio__cabeza">
+            <div class="card-servicio__foto"><img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=200&q=60" alt="Planos arquitectónicos" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
+            <h3 contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-1-titulo" data-label="Servicios · Tarjeta 1 · Título">Licencias de construcción</h3>
+            <span class="card-servicio__flecha" aria-hidden="true">▾</span>
+          </div>
+          <div class="card-servicio__detalle">
+            <ul>
+              <li contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-1-item-1" data-label="Servicios · Tarjeta 1 · Punto 1"><span class="card-servicio__item-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 21V10l8-6 8 6v11M9 21v-6h6v6"/><path d="M7 10v5M12 10v5M17 10v5"/></svg></span>Registro de Manifestaciones de Construcción (A, B y C)</li>
+              <li contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-1-item-2" data-label="Servicios · Tarjeta 1 · Punto 2"><span class="card-servicio__item-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 21V10l8-6 8 6v11M9 21v-6h6v6"/><path d="M7 10v5M12 10v5M17 10v5"/></svg></span>Licencias de construcción especial: demoliciones, tapiales e instalaciones subterráneas</li>
+            </ul>
+            <p class="card-servicio__nota" contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-1-nota" data-label="Servicios · Tarjeta 1 · Nota">Integradas y gestionadas de principio a fin.</p>
           </div>
         </div>
-        <div class="card-servicio">
-          <div class="foto"><img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=700&q=60" alt="Revisión de expediente de licencia" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
-          <div class="body">
-            <h3 contenteditable="true" data-field="servicio-4-titulo" data-label="Servicios · Tarjeta 4 · Título">Licencias de operación mercantil</h3>
-            <p contenteditable="true" data-field="servicio-4-texto" data-label="Servicios · Tarjeta 4 · Texto">Licencias de Operación de Establecimientos mercantiles, integradas y gestionadas de principio a fin.</p>
+        <div class="card-servicio" onclick="toggleServicio(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="card-servicio__cabeza">
+            <div class="card-servicio__foto"><img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=200&q=60" alt="Revisión de expediente de licencia" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
+            <h3 contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-4-titulo" data-label="Servicios · Tarjeta 4 · Título">Licencias de operación mercantil</h3>
+            <span class="card-servicio__flecha" aria-hidden="true">▾</span>
+          </div>
+          <div class="card-servicio__detalle">
+            <ul>
+              <li contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-4-item-1" data-label="Servicios · Tarjeta 4 · Punto 1"><span class="card-servicio__item-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5M3 9a2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0"/><path d="M5 9v11h14V9M10 20v-6h4v6"/></svg></span>Licencia de Operación de Establecimientos Mercantiles</li>
+            </ul>
+            <p class="card-servicio__nota" contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-4-nota" data-label="Servicios · Tarjeta 4 · Nota">Integrada y gestionada de principio a fin.</p>
           </div>
         </div>
-        <div class="card-servicio">
-          <div class="foto"><img src="https://images.unsplash.com/photo-1581090690925-3898802525e2?auto=format&fit=crop&w=700&q=60" alt="Revisión de expediente técnico" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
-          <div class="body">
-            <h3 contenteditable="true" data-field="servicio-2-titulo" data-label="Servicios · Tarjeta 2 · Título">Firmas de D.R.O. y Corresponsables</h3>
-            <p contenteditable="true" data-field="servicio-2-texto" data-label="Servicios · Tarjeta 2 · Texto">Firmas responsivas de Director Responsable de Obra y Corresponsables vigentes registrados ante la Ciudad de México, para inicio de proyecto o para un proyecto que ya tienes en marcha.</p>
+        <div class="card-servicio" onclick="toggleServicio(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="card-servicio__cabeza">
+            <div class="card-servicio__foto"><img src="https://images.unsplash.com/photo-1581090690925-3898802525e2?auto=format&fit=crop&w=200&q=60" alt="Revisión de expediente técnico" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
+            <h3 contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-2-titulo" data-label="Servicios · Tarjeta 2 · Título">Firmas de D.R.O. y Corresponsables</h3>
+            <span class="card-servicio__flecha" aria-hidden="true">▾</span>
+          </div>
+          <div class="card-servicio__detalle">
+            <ul>
+              <li contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-2-item-1" data-label="Servicios · Tarjeta 2 · Punto 1"><span class="card-servicio__item-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18a8 8 0 0 1 16 0z"/><path d="M2 18h20"/><path d="M12 6v3"/></svg></span>Firma responsiva de Director Responsable de Obra (D.R.O.)</li>
+              <li contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-2-item-2" data-label="Servicios · Tarjeta 2 · Punto 2"><span class="card-servicio__item-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18a8 8 0 0 1 16 0z"/><path d="M2 18h20"/><path d="M12 6v3"/></svg></span>Firma de Corresponsables vigentes ante la Ciudad de México</li>
+            </ul>
+            <p class="card-servicio__nota" contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-2-nota" data-label="Servicios · Tarjeta 2 · Nota">Para inicio de proyecto o un proyecto que ya tienes en marcha.</p>
           </div>
         </div>
-        <div class="card-servicio">
-          <div class="foto"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=700&q=60" alt="Obra en construcción" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
-          <div class="body">
-            <h3 contenteditable="true" data-field="servicio-3-titulo" data-label="Servicios · Tarjeta 3 · Título">Protección civil</h3>
-            <p contenteditable="true" data-field="servicio-3-texto" data-label="Servicios · Tarjeta 3 · Texto">Programas Internos de Protección Civil de mediano y alto riesgo, Estudios de Riesgo de Obra y/o Demolición, Remodelación, Medios publicitarios e Impactos urbanos, Capacitación de brigadas en materia de Protección Civil elaborados e impartidos por un ROPC con registro vigente ante la Secretaría de Gestión Integral del Riesgo y Protección Civil.</p>
+        <div class="card-servicio" onclick="toggleServicio(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="card-servicio__cabeza">
+            <div class="card-servicio__foto"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=200&q=60" alt="Obra en construcción" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
+            <h3 contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-3-titulo" data-label="Servicios · Tarjeta 3 · Título">Protección civil</h3>
+            <span class="card-servicio__flecha" aria-hidden="true">▾</span>
+          </div>
+          <div class="card-servicio__detalle">
+            <ul>
+              <li contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-3-item-1" data-label="Servicios · Tarjeta 3 · Punto 1"><span class="card-servicio__item-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>Programas Internos de Protección Civil (mediano y alto riesgo)</li>
+              <li contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-3-item-2" data-label="Servicios · Tarjeta 3 · Punto 2"><span class="card-servicio__item-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>Estudios de Riesgo de Obra y/o Demolición, Remodelación, Medios publicitarios e Impactos urbanos</li>
+              <li contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-3-item-3" data-label="Servicios · Tarjeta 3 · Punto 3"><span class="card-servicio__item-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>Capacitación de brigadas en Protección Civil</li>
+            </ul>
+            <p class="card-servicio__nota" contenteditable="true" onclick="event.stopPropagation()" data-field="servicio-3-nota" data-label="Servicios · Tarjeta 3 · Nota">Elaborado por un ROPC con registro vigente ante la SGIRPC.</p>
           </div>
         </div>
       </div>
@@ -586,7 +627,7 @@
    cambios (de Chris o nuestros), se sube este numero. Si el navegador trae guardado
    un borrador de una version anterior, se borra solo -- asi nadie se queda viendo
    una configuracion vieja por un "Guardar cambios" a medias o una prueba olvidada. */
-const CONTENT_VERSION = '2026-11-11-r3';
+const CONTENT_VERSION = '2026-11-12-r4';
 (function(){
   const clavePrevia = localStorage.getItem('capitalarq_maqueta_version');
   if (clavePrevia !== CONTENT_VERSION) {
@@ -936,6 +977,14 @@ function togglePreview(){
     el.setAttribute('contenteditable', on ? 'false' : 'true');
   });
   document.getElementById('btn-preview').textContent = on ? '✏️ Salir de vista previa' : '👁 Vista previa';
+}
+
+/* ---- servicios: tarjeta colapsada (icono+titulo) que despliega su lista al tocar/dar clic.
+   El hover en escritorio (@media hover:hover, en CSS) es un extra, nunca el unico disparador —
+   por accesibilidad en touch no se puede depender solo de ':hover'. */
+function toggleServicio(card){
+  const abierta = card.classList.toggle('is-abierto');
+  card.setAttribute('aria-expanded', abierta ? 'true' : 'false');
 }
 
 function toggleReviewPanel(){
