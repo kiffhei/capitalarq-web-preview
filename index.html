@@ -237,6 +237,19 @@
     box-shadow:0 10px 30px rgba(20,23,26,.06); border:1px solid var(--border);
   }
 
+  /* ---- nosotros: la foto entra desde afuera por la izquierda, el texto desde afuera
+     por la derecha, convergen al centro. Mismo disparador que .reveal (seccion.in-view). ---- */
+  .nosotros-entra-izq, .nosotros-entra-der {
+    opacity:0; transition:opacity 650ms var(--ease-out), transform 650ms var(--ease-out);
+  }
+  .nosotros-entra-izq { transform:translateX(-100%); }
+  .nosotros-entra-der { transform:translateX(100%); transition-delay:120ms; }
+  #page-sections > section.in-view .nosotros-entra-izq,
+  #page-sections > section.in-view .nosotros-entra-der { opacity:1; transform:translateX(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .nosotros-entra-izq, .nosotros-entra-der { transform:none !important; transition:opacity 300ms ease-out !important; }
+  }
+
   /* ---- footer ---- */
   footer.site { position:relative; background:var(--footer-bg); color:var(--footer-text); padding:64px 0 30px; overflow:hidden; transition:background var(--dur-in) var(--ease-out); }
   footer.site .wrap { position:relative; z-index:1; }
@@ -477,12 +490,12 @@
   <section id="nosotros">
     <div class="boxes-wrap"><div class="boxes-grid mirror" id="boxes-grid-nosotros"></div></div>
     <div class="boxes-vignette"></div>
-    <div class="wrap nosotros-grid reveal">
-      <div class="foto-pendiente">
+    <div class="wrap nosotros-grid">
+      <div class="foto-pendiente nosotros-entra-izq">
         <span style="font-size:26px;">👤</span>
         <span>Foto de Chris pendiente — se integra cuando la comparta</span>
       </div>
-      <div class="nosotros-copy">
+      <div class="nosotros-copy nosotros-entra-der">
         <div class="kicker" contenteditable="true" data-field="nosotros-kicker" data-label="Nosotros · Etiqueta">Nosotros</div>
         <h2 style="margin:8px 0 12px;font-size:29px;" contenteditable="true" data-field="nosotros-titulo" data-label="Nosotros · Título">Quién responde cuando algo se atora</h2>
         <p contenteditable="true" style="font-size:17px;color:var(--text-muted);max-width:520px;" data-field="nosotros-texto-1" data-label="Nosotros · Texto 1">En CapitalArq, cada proyecto cuenta con atención directa de su CEO: el Arq. Christhian Jair Cruz, Responsable Oficial de Protección Civil con registro vigente en la Ciudad de México.</p>
@@ -559,6 +572,19 @@
 </div>
 
 <script>
+/* control de version del contenido: cada vez que se publica una ronda nueva de
+   cambios (de Chris o nuestros), se sube este numero. Si el navegador trae guardado
+   un borrador de una version anterior, se borra solo -- asi nadie se queda viendo
+   una configuracion vieja por un "Guardar cambios" a medias o una prueba olvidada. */
+const CONTENT_VERSION = '2026-11-11-r2';
+(function(){
+  const clavePrevia = localStorage.getItem('capitalarq_maqueta_version');
+  if (clavePrevia !== CONTENT_VERSION) {
+    Object.keys(localStorage).filter(k => k.startsWith('capitalarq_maqueta_')).forEach(k => localStorage.removeItem(k));
+    localStorage.setItem('capitalarq_maqueta_version', CONTENT_VERSION);
+  }
+})();
+
 const LOGOS = {
   original: {
     label: "Original (Chris)",
