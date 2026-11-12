@@ -576,7 +576,7 @@
    cambios (de Chris o nuestros), se sube este numero. Si el navegador trae guardado
    un borrador de una version anterior, se borra solo -- asi nadie se queda viendo
    una configuracion vieja por un "Guardar cambios" a medias o una prueba olvidada. */
-const CONTENT_VERSION = '2026-11-11-r2';
+const CONTENT_VERSION = '2026-11-11-r3';
 (function(){
   const clavePrevia = localStorage.getItem('capitalarq_maqueta_version');
   if (clavePrevia !== CONTENT_VERSION) {
@@ -840,7 +840,7 @@ function persistEditable(){
 /* ---- originales, para poder reportar exactamente que cambio Chris ---- */
 const ORIGINALS = {};
 const DEFAULT_ORDER = Array.from(document.querySelectorAll('#page-sections > section')).map(s => s.id);
-const DEFAULT_LOGO = 'original';
+const DEFAULT_LOGO = 'revision_chris';
 const DEFAULT_ACCENT = 'oxford';
 const DEFAULT_ANGLE = 'a';
 function captureOriginals(){
@@ -1138,7 +1138,7 @@ buildAccentOpts();
 restoreOrder();
 addToolbars();
 setupReveal();
-setLogo(localStorage.getItem('capitalarq_maqueta_logo') || 'original');
+setLogo(localStorage.getItem('capitalarq_maqueta_logo') || 'revision_chris');
 applyAccent(localStorage.getItem('capitalarq_maqueta_accent') || 'oxford');
 setAngle(localStorage.getItem('capitalarq_maqueta_angle') || 'a');
 // el orden importa: los originales se capturan con el angulo ya aplicado,
