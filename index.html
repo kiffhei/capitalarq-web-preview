@@ -181,8 +181,7 @@
     transition: transform var(--dur-in) var(--ease-out), box-shadow var(--dur-in) var(--ease-out), border-color var(--dur-in) var(--ease-out);
   }
   .paso:hover { transform:translateY(-4px); box-shadow:0 12px 26px rgba(0,0,0,.08); border-color:var(--accent); }
-  .paso-num { font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:var(--border); transition:color var(--dur-in) var(--ease-out); }
-  .paso:hover .paso-num { color:var(--accent); }
+  .paso-num { font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:#D9560C; }
   .paso h3 { font-size:15px; margin:8px 0 6px; }
   .paso p { font-size:13px; color:var(--text-muted); margin:0; }
   @media (max-width:500px){ .flujo-grid{ grid-template-columns:1fr; } }
@@ -215,7 +214,7 @@
   /* la linea va de centro a centro del nodo 1 al nodo 4: con 4 columnas iguales esos centros
      caen siempre en 12.5% y 87.5% del ancho, sin importar que tan largo sea cada texto */
   .proceso-tracker__linea { position:absolute; top:17px; left:12.5%; right:12.5%; height:2px; background:var(--border); }
-  .proceso-tracker__avance { position:absolute; top:0; left:0; height:100%; width:0%; background:var(--accent); transition:width 1300ms cubic-bezier(.4,0,.2,1); }
+  .proceso-tracker__avance { position:absolute; top:0; left:0; height:100%; width:0%; background:#14406B; transition:width 1300ms cubic-bezier(.4,0,.2,1); }
   .proceso-tracker__etapas { position:relative; display:flex; gap:10px; }
   .etapa { display:flex; flex-direction:column; align-items:center; gap:14px; flex:1 1 0; min-width:0; text-align:center; }
   .etapa__nodo {
@@ -223,7 +222,7 @@
     display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:var(--text-muted);
     transition:border-color 500ms var(--ease-out), color 500ms var(--ease-out), background 500ms var(--ease-out), transform 500ms var(--ease-out);
   }
-  .etapa.is-activa .etapa__nodo { border-color:var(--accent); background:var(--accent); color:#fff; transform:scale(1.08); }
+  .etapa.is-activa .etapa__nodo { border-color:#14406B; background:#14406B; color:#fff; transform:scale(1.08); }
   .etapa__label { font-size:16px; color:var(--text); font-weight:700; line-height:1.3; }
   @media (max-width:760px){
     .proceso-tracker__linea{ display:none; }
@@ -403,7 +402,7 @@
     <div class="boxes-vignette"></div>
     <div class="wrap hero-inner reveal">
       <div class="kicker" id="hero-eyebrow" contenteditable="true" data-label="Hero · Etiqueta superior">GESTIÓN DE TRÁMITES DE CONSTRUCCIÓN EN CDMX</div>
-      <h1 id="hero-h1" contenteditable="true" style="margin:14px 0 18px;" data-label="Hero · Título principal">Tu proyecto <span style="color:#D9560C;">avanza</span>. Nosotros nos encargamos de hacerlo posible.</h1>
+      <h1 id="hero-h1" contenteditable="true" style="margin:14px 0 18px;" data-label="Hero · Título principal">Tu proyecto <span style="color:#D9560C;">avanza</span>. Nosotros nos encargamos de <span style="color:#D9560C;">hacerlo posible</span>.</h1>
       <p class="entradilla" id="hero-entradilla" contenteditable="true" style="margin:0 auto 30px;" data-label="Hero · Párrafo">Licencias de Construcción, Licencias de Operación de Establecimientos mercantiles, Firmas responsivas de D.R.O. y Corresponsables, Programas Internos de Protección Civil y Estudios de Riesgo. Realizamos tu análisis de normatividad y viabilidad, integramos tu expediente, se gestiona y se le da puntual seguimiento hasta que se autorice. Tú no pierdes tiempo aprendiendo una plataforma que no vas a volver a usar. Ni haciendo filas innecesarias en dependencias de gobierno para ingreso de expedientes.</p>
       <div class="cta-row" style="justify-content:center;">
         <a class="btn btn-primario" id="hero-cta1" contenteditable="true" href="#" data-label="Hero · Botón 1">Cuéntanos tu caso</a>
@@ -485,7 +484,7 @@
   <section id="proceso">
     <div class="wrap reveal">
       <div class="kicker" style="text-align:center;" contenteditable="true" data-field="proceso-kicker" data-label="Seguimiento · Etiqueta">Seguimiento puntual</div>
-      <p class="proceso-statement" contenteditable="true" data-field="proceso-texto" data-label="Seguimiento · Declaración">Integramos cada expediente, coordinamos su ingreso a la dependencia o plataforma correspondiente y damos seguimiento puntual, manteniéndote informado sobre cada etapa del proceso hasta su íntegra resolución.</p>
+      <p class="proceso-statement" contenteditable="true" data-field="proceso-texto" data-label="Seguimiento · Declaración"><span style="color:#D9560C;">Integramos</span> cada expediente, <span style="color:#D9560C;">coordinamos</span> su ingreso a la dependencia o plataforma correspondiente y damos <span style="color:#D9560C;">seguimiento puntual</span>, manteniéndote informado sobre cada etapa del proceso hasta su <span style="color:#D9560C;">íntegra resolución</span>.</p>
       <div class="proceso-tracker" id="proceso-tracker">
         <div class="proceso-tracker__linea"><div class="proceso-tracker__avance" id="proceso-avance"></div></div>
         <div class="proceso-tracker__etapas">
@@ -508,8 +507,8 @@
       </div>
       <div class="nosotros-copy nosotros-entra-der">
         <div class="kicker" contenteditable="true" data-field="nosotros-kicker" data-label="Nosotros · Etiqueta">Nosotros</div>
-        <h2 style="margin:8px 0 12px;font-size:29px;" contenteditable="true" data-field="nosotros-titulo" data-label="Nosotros · Título">Quién responde cuando algo se atora</h2>
-        <p contenteditable="true" style="font-size:17px;color:var(--text-muted);max-width:520px;" data-field="nosotros-texto-1" data-label="Nosotros · Texto 1">En CapitalArq, cada proyecto cuenta con atención directa de su CEO: el Arq. Christhian Jair Cruz, Responsable Oficial de Protección Civil con registro vigente en la Ciudad de México.</p>
+        <h2 style="margin:8px 0 12px;font-size:29px;color:#D9560C;" contenteditable="true" data-field="nosotros-titulo" data-label="Nosotros · Título">Quién responde cuando algo se atora</h2>
+        <p contenteditable="true" style="font-size:17px;color:var(--text-muted);max-width:520px;" data-field="nosotros-texto-1" data-label="Nosotros · Texto 1">En <b><i>CapitalArq</i></b>, cada proyecto cuenta con atención directa de su CEO: el Arq. Christhian Jair Cruz, Responsable Oficial de Protección Civil con registro vigente en la Ciudad de México.</p>
         <p contenteditable="true" style="font-size:17px;color:var(--text-muted);max-width:520px;margin-top:14px;" data-field="nosotros-texto-2" data-label="Nosotros · Texto 2">Aquí tienes comunicación directa con el profesional que conoce tu expediente y da seguimiento a cada requerimiento ante las autoridades.</p>
       </div>
     </div>
@@ -528,7 +527,7 @@
       <div class="logo-slot logo-slot--footer" id="logo-slot-footer"></div>
     </div>
     <div class="footer-meta">
-      <div>CapitalArq — Protección Civil y Arquitectura</div>
+      <div><b><i>CapitalArq</i></b> — Protección Civil y Arquitectura</div>
       <div>Instagram: <a href="https://instagram.com/capitalarq" target="_blank" style="color:#8fb8e0;">@capitalarq</a></div>
       <div>CDMX</div>
     </div>
@@ -615,8 +614,8 @@ const LOGOS = {
 };
 
 const ACCENTS = {
-  azul:    { label:"Azul",    swatch:"#1E5F9E", value:"#1E5F9E", soft:"#E8F0F8", detail2:"#B8862E" },
-  naranja: { label:"Naranja (chaleco)", swatch:"#D9560C", value:"#D9560C", soft:"#FCE7DA", detail2:"#1E5F9E" },
+  azul:    { label:"Azul Blueprint", swatch:"#14406B", value:"#14406B", soft:"#E6EDF3", detail2:"#B8862E" },
+  naranja: { label:"Naranja (chaleco)", swatch:"#D9560C", value:"#D9560C", soft:"#FCE7DA", detail2:"#14406B" },
   mostaza: { label:"Mostaza", swatch:"#B8862E", value:"#B8862E", soft:"#F5EAD3", detail2:"#43494F" },
   oxford:  { label:"Gris Oxford (escala de grises)", swatch:"#43494F", value:"#43494F", soft:"#E9EAEC", detail2:"#D9560C" }
 };
@@ -624,7 +623,7 @@ const ACCENTS = {
 const HERO_ANGLES = {
   a: {
     eyebrow: "GESTIÓN DE TRÁMITES DE CONSTRUCCIÓN EN CDMX",
-    h1: 'Tu proyecto <span style="color:#D9560C;">avanza</span>. Nosotros nos encargamos de hacerlo posible.',
+    h1: 'Tu proyecto <span style="color:#D9560C;">avanza</span>. Nosotros nos encargamos de <span style="color:#D9560C;">hacerlo posible</span>.',
     entradilla: "Licencias de Construcción, Licencias de Operación de Establecimientos mercantiles, Firmas responsivas de D.R.O. y Corresponsables, Programas Internos de Protección Civil y Estudios de Riesgo. Realizamos tu análisis de normatividad y viabilidad, integramos tu expediente, se gestiona y se le da puntual seguimiento hasta que se autorice. Tú no pierdes tiempo aprendiendo una plataforma que no vas a volver a usar. Ni haciendo filas innecesarias en dependencias de gobierno para ingreso de expedientes.",
     cta1: "Cuéntanos tu caso",
     cta2: "Escríbenos por WhatsApp"
@@ -632,7 +631,7 @@ const HERO_ANGLES = {
   b: {
     eyebrow: "PROTECCIÓN CIVIL Y ARQUITECTURA",
     h1: "La Ventanilla Única ya es digital. Eso no la hizo fácil.",
-    entradilla: "Los requisitos siguen siendo los mismos y los criterios cambian entre alcaldías. CapitalArq recorre ese camino por ti — desde el diagnóstico hasta que tienes la resolución en mano.",
+    entradilla: "Los requisitos siguen siendo los mismos y los criterios cambian entre alcaldías. <b><i>CapitalArq</i></b> recorre ese camino por ti — desde el diagnóstico hasta que tienes la resolución en mano.",
     cta1: "Empieza tu diagnóstico",
     cta2: "Habla con nosotros por WhatsApp"
   }
@@ -789,7 +788,7 @@ function setAngle(key){
   const a = HERO_ANGLES[key];
   document.getElementById('hero-eyebrow').textContent = a.eyebrow;
   document.getElementById('hero-h1').innerHTML = a.h1;
-  document.getElementById('hero-entradilla').textContent = a.entradilla;
+  document.getElementById('hero-entradilla').innerHTML = a.entradilla;
   document.getElementById('hero-cta1').textContent = a.cta1;
   document.getElementById('hero-cta2').textContent = a.cta2;
   document.querySelectorAll('#angle-opts button').forEach(b => b.classList.toggle('active', b.dataset.angle === key));
