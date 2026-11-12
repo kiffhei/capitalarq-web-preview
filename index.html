@@ -7,7 +7,7 @@
 <title>CapitalArq — maqueta preliminar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Poppins:wght@700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Poppins:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     /* el sitio solo tiene version clara — evita que el navegador/SO intente "oscurecerlo" solo */
@@ -58,7 +58,18 @@
   .site-head-inner { display:flex; align-items:center; justify-content:space-between; gap:28px; padding:20px 24px; max-width:1140px; margin:0 auto; min-height:108px; }
   .logo-slot { display:flex; align-items:center; height:88px; }
   .logo-slot svg, .logo-slot img { height:88px; width:auto; max-width:400px; object-fit:contain; transition:opacity var(--dur-in) var(--ease-out); }
-  nav.site-nav { display:flex; gap:30px; font-size:16px; font-weight:600; }
+  nav.site-nav { display:flex; align-items:center; gap:36px; }
+  nav.site-nav a {
+    font-family:'Poppins', sans-serif; font-weight:600; font-size:14.5px; letter-spacing:.015em;
+    color:var(--text); text-decoration:none; position:relative; padding:6px 0;
+    transition:color var(--dur-in) var(--ease-out);
+  }
+  nav.site-nav a::after {
+    content:''; position:absolute; left:0; right:100%; bottom:0; height:2px; background:var(--accent);
+    transition:right var(--dur-in) var(--ease-out);
+  }
+  nav.site-nav a:hover { color:var(--accent); }
+  nav.site-nav a:hover::after { right:0; }
   .nav-right { display:flex; align-items:center; gap:18px; }
   .whatsapp-chip {
     display:flex; align-items:center; gap:9px; font-size:15px; font-weight:600;
