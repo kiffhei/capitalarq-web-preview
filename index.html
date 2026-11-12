@@ -177,7 +177,8 @@
   @media (max-width:500px){ .flujo-grid{ grid-template-columns:1fr; } }
 
   /* ---- servicios ---- */
-  .servicios-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:30px; }
+  .servicios-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin-top:30px; }
+  @media (max-width:980px){ .servicios-grid{ grid-template-columns:repeat(2,1fr); } }
   .card-servicio {
     border:1px solid var(--border); border-radius:6px; overflow:hidden; background:var(--surface);
     transition: transform var(--dur-in) var(--ease-out), box-shadow var(--dur-in) var(--ease-out), border-color var(--dur-in) var(--ease-out);
@@ -390,7 +391,7 @@
   <section id="flujo">
     <div class="wrap flujo-layout reveal">
       <div>
-      <div class="kicker">Así trabajamos tu trámite</div>
+      <div class="kicker" contenteditable="true" data-field="flujo-kicker" data-label="Cómo trabajamos · Etiqueta">Así trabajamos tu trámite</div>
       <div class="flujo-grid">
         <div class="paso">
           <div class="paso-num">01</div>
@@ -422,14 +423,21 @@
 
   <section id="servicios">
     <div class="wrap reveal">
-      <div class="kicker">Servicios</div>
+      <div class="kicker" contenteditable="true" data-field="servicios-kicker" data-label="Servicios · Etiqueta">Servicios</div>
       <h2 style="margin:8px 0 0;font-size:26px;" contenteditable="true" data-field="servicios-titulo" data-label="Servicios · Título de sección">En qué te acompañamos</h2>
       <div class="servicios-grid">
         <div class="card-servicio">
           <div class="foto"><img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=700&q=60" alt="Planos arquitectónicos" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
           <div class="body">
-            <h3 contenteditable="true" data-field="servicio-1-titulo" data-label="Servicios · Tarjeta 1 · Título">Licencias de construcción y operación</h3>
+            <h3 contenteditable="true" data-field="servicio-1-titulo" data-label="Servicios · Tarjeta 1 · Título">Licencias de construcción</h3>
             <p contenteditable="true" data-field="servicio-1-texto" data-label="Servicios · Tarjeta 1 · Texto">Registros de Manifestaciones de Construcción (A, B y C) y licencias de construcción especial (Demoliciones, tapiales, instalaciones subterráneas, etc.), integradas y gestionadas de principio a fin.</p>
+          </div>
+        </div>
+        <div class="card-servicio">
+          <div class="foto"><img src="https://images.unsplash.com/photo-1581090690925-3898802525e2?auto=format&fit=crop&w=700&q=60" alt="Revisión de expediente de licencia" onerror="this.parentElement.style.background='var(--surface-2)'"></div>
+          <div class="body">
+            <h3 contenteditable="true" data-field="servicio-4-titulo" data-label="Servicios · Tarjeta 4 · Título">Licencias de Operación Mercantil</h3>
+            <p contenteditable="true" data-field="servicio-4-texto" data-label="Servicios · Tarjeta 4 · Texto">Licencias de Operación de Establecimientos Mercantiles, integradas y gestionadas de principio a fin.</p>
           </div>
         </div>
         <div class="card-servicio">
@@ -452,15 +460,15 @@
 
   <section id="proceso">
     <div class="wrap reveal">
-      <div class="kicker" style="text-align:center;">Seguimiento puntual</div>
+      <div class="kicker" style="text-align:center;" contenteditable="true" data-field="proceso-kicker" data-label="Seguimiento · Etiqueta">Seguimiento puntual</div>
       <p class="proceso-statement" contenteditable="true" data-field="proceso-texto" data-label="Seguimiento · Declaración">Integramos cada expediente, coordinamos su ingreso a la dependencia o plataforma correspondiente y damos seguimiento puntual, manteniéndote informado sobre cada etapa del proceso hasta su íntegra resolución.</p>
       <div class="proceso-tracker" id="proceso-tracker">
         <div class="proceso-tracker__linea"><div class="proceso-tracker__avance" id="proceso-avance"></div></div>
         <div class="proceso-tracker__etapas">
-          <div class="etapa"><span class="etapa__nodo">1</span><span class="etapa__label">Expediente integrado</span></div>
-          <div class="etapa"><span class="etapa__nodo">2</span><span class="etapa__label">Requisitos coordinados</span></div>
-          <div class="etapa"><span class="etapa__nodo">3</span><span class="etapa__label">Ante la autoridad</span></div>
-          <div class="etapa"><span class="etapa__nodo">4</span><span class="etapa__label">Te mantenemos informado</span></div>
+          <div class="etapa"><span class="etapa__nodo">1</span><span class="etapa__label" contenteditable="true" data-field="etapa-1" data-label="Seguimiento · Etapa 1">Expediente integrado</span></div>
+          <div class="etapa"><span class="etapa__nodo">2</span><span class="etapa__label" contenteditable="true" data-field="etapa-2" data-label="Seguimiento · Etapa 2">Requisitos coordinados</span></div>
+          <div class="etapa"><span class="etapa__nodo">3</span><span class="etapa__label" contenteditable="true" data-field="etapa-3" data-label="Seguimiento · Etapa 3">Ante la autoridad</span></div>
+          <div class="etapa"><span class="etapa__nodo">4</span><span class="etapa__label" contenteditable="true" data-field="etapa-4" data-label="Seguimiento · Etapa 4">Te mantenemos informado</span></div>
         </div>
       </div>
     </div>
@@ -475,7 +483,7 @@
         <span>Foto de Chris pendiente — se integra cuando la comparta</span>
       </div>
       <div class="nosotros-copy">
-        <div class="kicker">Nosotros</div>
+        <div class="kicker" contenteditable="true" data-field="nosotros-kicker" data-label="Nosotros · Etiqueta">Nosotros</div>
         <h2 style="margin:8px 0 12px;font-size:29px;" contenteditable="true" data-field="nosotros-titulo" data-label="Nosotros · Título">Quién responde cuando algo se atora</h2>
         <p contenteditable="true" style="font-size:17px;color:var(--text-muted);max-width:520px;" data-field="nosotros-texto-1" data-label="Nosotros · Texto 1">En CapitalArq, cada proyecto cuenta con atención directa de su CEO: el Arq. Christhian Jair Cruz, Responsable Oficial de Protección Civil con registro vigente en la Ciudad de México.</p>
         <p contenteditable="true" style="font-size:17px;color:var(--text-muted);max-width:520px;margin-top:14px;" data-field="nosotros-texto-2" data-label="Nosotros · Texto 2">Aquí tienes comunicación directa con el profesional que conoce tu expediente y da seguimiento a cada requerimiento ante las autoridades.</p>
@@ -489,7 +497,7 @@
   <div class="wrap">
     <div class="footer-top">
       <div class="footer-copy">
-        <div class="kicker" style="color:#8fb8e0;">¿Tu obra está parada por un trámite?</div>
+        <div class="kicker" style="color:#8fb8e0;" contenteditable="true" data-field="footer-kicker" data-label="Pie de página · Etiqueta">¿Tu obra está parada por un trámite?</div>
         <h2 contenteditable="true" data-field="footer-titulo" data-label="Pie de página · Título">Escríbenos y vemos qué necesita tu caso.</h2>
         <a class="btn btn-primario" contenteditable="true" href="#" data-field="footer-cta" data-label="Pie de página · Botón">Escríbenos por WhatsApp</a>
       </div>
