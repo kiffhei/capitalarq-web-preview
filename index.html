@@ -191,35 +191,41 @@
   #hero-eyebrow { font-size:12.5px; }
   #hero-h1 { font-size:36px; }
   #hero-entradilla { font-size:18px; }
-  #hero-cta1, #hero-cta2 { font-size:15.5px; }
+  #hero-cta1 { font-size:15.5px; }
   #nosotros .kicker { font-size:12.5px; }
   @media (max-width:600px){ #hero-h1{ font-size:28px; } #hero-entradilla{ font-size:16px; } }
 
-  /* ---- hero: etiqueta que rota entre servicios (reemplaza la lista estatica de la entradilla) ---- */
+  /* ---- hero: etiqueta que rota entre servicios (reemplaza la lista estatica de la entradilla) ----
+     mismo lenguaje "liquid glass" que los botones, para que destaque mas que texto plano. */
   .hero-rotador {
-    display:flex; align-items:baseline; justify-content:center; gap:8px; flex-wrap:wrap;
-    margin:2px 0 16px; font-size:17px; color:var(--text-muted);
+    display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+    margin:4px 0 20px; font-size:15px; color:var(--text-muted);
   }
   .hero-rotador__prefijo { white-space:nowrap; }
   .hero-rotador__viewport {
-    position:relative; display:inline-block; height:1.3em; min-width:180px;
-    overflow:hidden; text-align:left; vertical-align:bottom;
+    position:relative; display:inline-block; height:2.4em; min-width:180px;
+    padding:0 20px; border-radius:999px; overflow:hidden; text-align:left; vertical-align:middle;
+    background:linear-gradient(145deg, rgba(255,255,255,.72) 0%, rgba(255,255,255,.32) 100%);
+    border:1px solid rgba(217,86,12,.35);
+    box-shadow:0 10px 24px -10px rgba(20,23,26,.16), inset 0 1px 1px rgba(255,255,255,.65);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
     transition:width 320ms var(--ease-out);
   }
   .hero-rotador__item {
-    position:absolute; left:0; top:0; white-space:nowrap;
-    font-weight:600; color:var(--accent);
-    opacity:0; transform:translateY(100%);
+    position:absolute; left:20px; top:50%; white-space:nowrap;
+    font-size:17px; font-weight:700; color:#D9560C;
+    opacity:0; transform:translateY(50%);
     transition:opacity 420ms var(--ease-out), transform 420ms var(--ease-out);
   }
-  .hero-rotador__item.is-activo { opacity:1; transform:translateY(0); }
-  .hero-rotador__item.is-saliendo { opacity:0; transform:translateY(-100%); }
+  .hero-rotador__item.is-activo { opacity:1; transform:translateY(-50%); }
+  .hero-rotador__item.is-saliendo { opacity:0; transform:translateY(-150%); }
   @media (max-width:600px){
-    .hero-rotador { font-size:15px; }
-    .hero-rotador__viewport { min-width:150px; }
+    .hero-rotador { font-size:13.5px; }
+    .hero-rotador__viewport { min-width:150px; padding:0 16px; }
+    .hero-rotador__item { left:16px; font-size:15px; }
   }
   @media (prefers-reduced-motion: reduce){
-    .hero-rotador__item { transition:opacity 420ms linear; transform:none !important; }
+    .hero-rotador__item { transition:opacity 420ms linear; transform:translateY(-50%) !important; }
   }
 
   /* ---- hero ---- */
@@ -227,15 +233,41 @@
   .hero-grid h1 { font-size:40px; line-height:1.12; font-weight:700; letter-spacing:-0.01em; margin:10px 0 16px; }
   .hero-grid p.entradilla { font-size:16px; color:var(--text-muted); max-width:520px; margin:0 0 26px; }
   .cta-row { display:flex; gap:12px; flex-wrap:wrap; }
+  /* ---- botones: "liquid glass" -- vidrio esmerilado con blur, degradado sutil y sombra interior ---- */
   .btn {
-    display:inline-block; padding:13px 24px; border-radius:4px; font-weight:600; font-size:14px;
-    text-decoration:none; cursor:pointer; border:1px solid transparent;
-    transition: transform var(--dur-out) var(--ease-in), box-shadow var(--dur-in) var(--ease-out), background var(--dur-in) var(--ease-out);
+    display:inline-flex; align-items:center; justify-content:center; gap:9px;
+    padding:13px 26px; border-radius:999px; font-weight:600; font-size:14px;
+    text-decoration:none; cursor:pointer; color:var(--text);
+    background:linear-gradient(145deg, rgba(255,255,255,.72) 0%, rgba(255,255,255,.32) 100%);
+    border:1px solid rgba(20,23,26,.1);
+    box-shadow:0 10px 28px -10px rgba(20,23,26,.16), inset 0 1px 1px rgba(255,255,255,.65), inset 0 -1px 2px rgba(20,23,26,.05);
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    transition: transform var(--dur-out) var(--ease-in), box-shadow var(--dur-in) var(--ease-out), background var(--dur-in) var(--ease-out), border-color var(--dur-in) var(--ease-out);
   }
-  .btn:hover { transform:translateY(-2px); box-shadow:0 10px 22px rgba(0,0,0,.14); }
+  .btn svg { width:18px; height:18px; flex:0 0 auto; }
+  .btn:hover {
+    transform:translateY(-2px);
+    background:linear-gradient(145deg, rgba(255,255,255,.88) 0%, rgba(255,255,255,.46) 100%);
+    box-shadow:0 16px 34px -10px rgba(20,23,26,.2), inset 0 1px 1px rgba(255,255,255,.8);
+  }
   .btn:active { transform:translateY(0); transition-duration:var(--dur-out); }
-  .btn-primario { background:var(--text); color:var(--bg); }
-  .btn-secundario { background:var(--surface); color:var(--text); border-color:var(--border); }
+  .btn-primario { border-color:rgba(217,86,12,.45); }
+  .btn-primario svg { color:#D9560C; }
+  .btn-primario:hover { border-color:rgba(217,86,12,.7); box-shadow:0 16px 34px -10px rgba(217,86,12,.26), inset 0 1px 1px rgba(255,255,255,.8); }
+  /* mismo cristal, pero templado para el fondo oscuro del footer */
+  footer.site .btn {
+    color:var(--footer-text);
+    background:linear-gradient(145deg, rgba(255,255,255,.1) 0%, rgba(255,255,255,.03) 100%);
+    border-color:rgba(255,255,255,.16);
+    box-shadow:0 10px 28px -10px rgba(0,0,0,.5), inset 0 1px 1px rgba(255,255,255,.12), inset 0 -1px 2px rgba(0,0,0,.4);
+  }
+  footer.site .btn:hover {
+    background:linear-gradient(145deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,.05) 100%);
+    border-color:rgba(255,255,255,.28);
+    box-shadow:0 16px 34px -10px rgba(0,0,0,.6), inset 0 1px 1px rgba(255,255,255,.2);
+  }
+  footer.site .btn-primario { border-color:rgba(217,86,12,.55); }
+  footer.site .btn-primario svg { color:#FF8243; }
   .hero-img { position:relative; border-radius:6px; overflow:hidden; aspect-ratio:4/3; background:var(--surface-2); }
   .hero-img img { width:100%; height:100%; object-fit:cover; }
   @media (max-width:820px){ .hero-grid{ grid-template-columns:1fr; } .hero-grid h1{ font-size:30px; } }
@@ -393,17 +425,14 @@
   /* ---- footer ---- */
   footer.site { position:relative; background:var(--footer-bg); color:var(--footer-text); padding:64px 0 30px; overflow:hidden; transition:background var(--dur-in) var(--ease-out); }
   footer.site .wrap { position:relative; z-index:1; }
-  .footer-top { display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:24px; }
-  .footer-copy { max-width:520px; }
-  footer.site h2 { font-size:26px; margin:0 0 18px; max-width:520px; }
-  footer.site .btn-primario { background:var(--accent); color:#fff; }
+  .footer-centrado { display:flex; flex-direction:column; align-items:center; text-align:center; gap:22px; }
+  .footer-copy { max-width:560px; display:flex; flex-direction:column; align-items:center; }
+  footer.site h2 { font-size:30px; margin:8px 0 22px; max-width:560px; }
   .logo-slot--footer {
-    display:flex; align-items:center; justify-content:flex-end;
-    height:173px; opacity:.95; pointer-events:none;
-    transform:translateX(12%);
+    display:flex; align-items:center; justify-content:center;
+    height:64px; opacity:.95; pointer-events:none;
   }
-  .logo-slot--footer svg, .logo-slot--footer img { height:173px; width:auto; max-width:390px; object-fit:contain; }
-  @media (max-width:900px){ .footer-top{ grid-template-columns:1fr; } .logo-slot--footer{ display:none; } }
+  .logo-slot--footer svg, .logo-slot--footer img { height:64px; width:auto; max-width:260px; object-fit:contain; }
   .footer-meta { margin-top:50px; padding-top:24px; border-top:1px solid rgba(255,255,255,.12); display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-size:12.5px; color:var(--footer-text-muted); }
 
   /* ---- footer: version cinematografica (opcional, panel de revision) ----
@@ -435,7 +464,7 @@
   }
   .footer-cinematico__texto-gigante {
     position:absolute; bottom:-3.5vh; left:50%; transform:translateX(-50%);
-    font-family:'Poppins', sans-serif; font-size:13vw; font-weight:800; letter-spacing:-0.03em; line-height:.78;
+    font-family:'Poppins', sans-serif; font-size:13vw; font-weight:700; letter-spacing:-0.02em; line-height:.78;
     white-space:nowrap; z-index:0; pointer-events:none; user-select:none;
     color:transparent; -webkit-text-stroke:1px rgba(250,250,248,.08);
     background:linear-gradient(180deg, rgba(250,250,248,.1) 0%, transparent 62%);
@@ -583,8 +612,7 @@
       </div>
       <p class="entradilla" id="hero-entradilla" contenteditable="true" style="margin:0 auto 30px;" data-label="Hero · Párrafo">Realizamos tu análisis de normatividad y viabilidad, integramos tu expediente, se gestiona y se le da puntual seguimiento hasta que se autorice. Tú no pierdes tiempo aprendiendo una plataforma que no vas a volver a usar. Ni haciendo filas innecesarias en dependencias de gobierno para ingreso de expedientes.</p>
       <div class="cta-row" style="justify-content:center;">
-        <a class="btn btn-primario" id="hero-cta1" contenteditable="true" href="#" data-label="Hero · Botón 1">Cuéntanos tu caso</a>
-        <a class="btn btn-secundario" id="hero-cta2" contenteditable="true" href="#" data-label="Hero · Botón 2">Escríbenos por WhatsApp</a>
+        <a class="btn btn-primario" id="hero-cta1" contenteditable="true" href="#" data-label="Hero · Botón 1"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.816 9.816 0 0012.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 01-1.27-4.37c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.83 2.42a8.183 8.183 0 012.41 5.82c.02 4.54-3.68 8.24-8.22 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43-.14 0-.31-.01-.47-.01-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.25 3.73.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.14-1.18-.06-.11-.23-.17-.48-.29z"/></svg>Cuéntanos tu caso</a>
       </div>
     </div>
   </section>
@@ -736,13 +764,13 @@
   <div class="footer-cinematico__glow" aria-hidden="true"></div>
   <div class="footer-cinematico__texto-gigante" id="footer-texto-gigante" aria-hidden="true">CapitalArq</div>
   <div class="wrap footer-cinematico__capa" id="footer-contenido">
-    <div class="footer-top">
+    <div class="footer-centrado">
+      <div class="logo-slot logo-slot--footer" id="logo-slot-footer"></div>
       <div class="footer-copy">
         <div class="kicker" style="color:#8fb8e0;" contenteditable="true" data-field="footer-kicker" data-label="Pie de página · Etiqueta">¿Tu obra está parada por un trámite?</div>
         <h2 contenteditable="true" data-field="footer-titulo" data-label="Pie de página · Título">Escríbenos y vemos qué necesita tu caso.</h2>
-        <a class="btn btn-primario" contenteditable="true" href="#" data-field="footer-cta" data-label="Pie de página · Botón">Escríbenos por WhatsApp</a>
+        <a class="btn btn-primario" contenteditable="true" href="#" data-field="footer-cta" data-label="Pie de página · Botón"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.816 9.816 0 0012.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 01-1.27-4.37c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.83 2.42a8.183 8.183 0 012.41 5.82c.02 4.54-3.68 8.24-8.22 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43-.14 0-.31-.01-.47-.01-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.25 3.73.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.14-1.18-.06-.11-.23-.17-.48-.29z"/></svg>Escríbenos por WhatsApp</a>
       </div>
-      <div class="logo-slot logo-slot--footer" id="logo-slot-footer"></div>
     </div>
     <div class="footer-meta" id="footer-meta">
       <div><b><i>CapitalArq</i></b> — Protección Civil y Arquitectura</div>
@@ -777,8 +805,8 @@
     <div>
       <h4>Pie de página</h4>
       <div class="angle-opts" id="footer-style-opts">
-        <button data-footer-style="clasico" class="active">Clásico</button>
-        <button data-footer-style="cinematico">Cinematográfico</button>
+        <button data-footer-style="clasico">Clásico</button>
+        <button data-footer-style="cinematico" class="active">Cinematográfico</button>
       </div>
     </div>
     <p class="pr-note">Toca cualquier texto de la página para editarlo, y usa los botones ▲▼ que aparecen sobre cada sección para reordenarla. Fotos son de Unsplash, temporales — se sustituyen por las de Chris. Cuando termines, pulsa «Guardar cambios» abajo a la izquierda para mandárnoslo.</p>
@@ -815,7 +843,7 @@
    cambios (de Chris o nuestros), se sube este numero. Si el navegador trae guardado
    un borrador de una version anterior, se borra solo -- asi nadie se queda viendo
    una configuracion vieja por un "Guardar cambios" a medias o una prueba olvidada. */
-const CONTENT_VERSION = '2026-11-12-r5';
+const CONTENT_VERSION = '2026-11-12-r6';
 (function(){
   const clavePrevia = localStorage.getItem('capitalarq_maqueta_version');
   if (clavePrevia !== CONTENT_VERSION) {
@@ -849,20 +877,20 @@ const ACCENTS = {
   oxford:  { label:"Gris Oxford (escala de grises)", swatch:"#43494F", value:"#43494F", soft:"#E9EAEC", detail2:"#D9560C" }
 };
 
+const WHATSAPP_ICONO_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.816 9.816 0 0012.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 01-1.27-4.37c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.83 2.42a8.183 8.183 0 012.41 5.82c.02 4.54-3.68 8.24-8.22 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43-.14 0-.31-.01-.47-.01-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.25 3.73.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.14-1.18-.06-.11-.23-.17-.48-.29z"/></svg>';
+
 const HERO_ANGLES = {
   a: {
     eyebrow: "GESTIÓN DE TRÁMITES DE CONSTRUCCIÓN EN CDMX",
     h1: 'Tu proyecto <span style="color:#D9560C;">avanza</span>. Nosotros nos encargamos de <span style="color:#14406B;">hacerlo posible</span>.',
     entradilla: "Realizamos tu análisis de normatividad y viabilidad, integramos tu expediente, se gestiona y se le da puntual seguimiento hasta que se autorice. Tú no pierdes tiempo aprendiendo una plataforma que no vas a volver a usar. Ni haciendo filas innecesarias en dependencias de gobierno para ingreso de expedientes.",
-    cta1: "Cuéntanos tu caso",
-    cta2: "Escríbenos por WhatsApp"
+    cta1: "Cuéntanos tu caso"
   },
   b: {
     eyebrow: "PROTECCIÓN CIVIL Y ARQUITECTURA",
     h1: "La Ventanilla Única ya es digital. Eso no la hizo fácil.",
     entradilla: "Los requisitos siguen siendo los mismos y los criterios cambian entre alcaldías. <b><i>CapitalArq</i></b> recorre ese camino por ti — desde el diagnóstico hasta que tienes la resolución en mano.",
-    cta1: "Empieza tu diagnóstico",
-    cta2: "Habla con nosotros por WhatsApp"
+    cta1: "Empieza tu diagnóstico"
   }
 };
 
@@ -1018,8 +1046,7 @@ function setAngle(key){
   document.getElementById('hero-eyebrow').textContent = a.eyebrow;
   document.getElementById('hero-h1').innerHTML = a.h1;
   document.getElementById('hero-entradilla').innerHTML = a.entradilla;
-  document.getElementById('hero-cta1').textContent = a.cta1;
-  document.getElementById('hero-cta2').textContent = a.cta2;
+  document.getElementById('hero-cta1').innerHTML = WHATSAPP_ICONO_SVG + a.cta1;
   document.querySelectorAll('#angle-opts button').forEach(b => b.classList.toggle('active', b.dataset.angle === key));
   localStorage.setItem('capitalarq_maqueta_angle', key);
 }
@@ -1119,7 +1146,7 @@ const DEFAULT_ORDER = Array.from(document.querySelectorAll('#page-sections > sec
 const DEFAULT_LOGO = 'revision_chris';
 const DEFAULT_ACCENT = 'oxford';
 const DEFAULT_ANGLE = 'a';
-const DEFAULT_FOOTER_STYLE = 'clasico';
+const DEFAULT_FOOTER_STYLE = 'cinematico';
 function captureOriginals(){
   document.querySelectorAll('[contenteditable="true"]').forEach(el => {
     const key = fieldKey(el);
@@ -1442,6 +1469,13 @@ const HERO_ROTADOR_SERVICIOS = [
 ];
 let heroRotadorIndex = 0;
 let heroRotadorTimer = null;
+/* el ancho del item no incluye el padding horizontal del pill -- se suma aparte
+   para que la caja siempre respire igual, en cualquier breakpoint. */
+function anchoPillHeroRotador(vp, item){
+  const cs = getComputedStyle(vp);
+  const padding = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+  return Math.ceil(item.offsetWidth + padding) + 'px';
+}
 function buildHeroRotador(){
   const vp = document.getElementById('hero-rotador-viewport');
   if (!vp) return;
@@ -1453,7 +1487,7 @@ function buildHeroRotador(){
     vp.appendChild(span);
   });
   const primerItem = vp.querySelector('.hero-rotador__item');
-  if (primerItem) vp.style.width = primerItem.offsetWidth + 'px';
+  if (primerItem) vp.style.width = anchoPillHeroRotador(vp, primerItem);
   clearInterval(heroRotadorTimer);
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || HERO_ROTADOR_SERVICIOS.length < 2) return;
   heroRotadorTimer = setInterval(avanzarHeroRotador, 2200);
@@ -1467,7 +1501,7 @@ function avanzarHeroRotador(){
   items[actual].classList.remove('is-activo');
   items[actual].classList.add('is-saliendo');
   items[siguiente].classList.add('is-activo');
-  vp.style.width = items[siguiente].offsetWidth + 'px';
+  vp.style.width = anchoPillHeroRotador(vp, items[siguiente]);
   heroRotadorIndex = siguiente;
   setTimeout(() => { items[actual].classList.remove('is-saliendo'); }, 440);
 }
@@ -1477,7 +1511,7 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) return;
   const vp = document.getElementById('hero-rotador-viewport');
   const activo = vp && vp.querySelector('.hero-rotador__item.is-activo');
-  if (activo) vp.style.width = activo.offsetWidth + 'px';
+  if (activo) vp.style.width = anchoPillHeroRotador(vp, activo);
 });
 
 /* ---- init ---- */
