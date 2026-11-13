@@ -166,10 +166,14 @@
   /* ---- hero: reticula interactiva en tinta sobre papel ---- */
   #hero { padding:0; background:var(--bg); overflow:hidden; border-bottom:none; }
   #servicios {
-    background-color:var(--accent);
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    border-bottom:none; transition:background-color var(--dur-in) var(--ease-out);
-  } /* grano/ruido sutil tipo concreto — a proposito distinto de la reticula del resto del sitio */
+    position:relative; background-color:#141414; border-bottom:none;
+  } /* mismo fondo oscuro + mancha que el footer, sin cuadricula -- consistencia entre ambos */
+  #servicios::before {
+    content:''; position:absolute; left:50%; top:45%; width:72vw; height:52vh; max-width:900px;
+    transform:translate(-50%,-50%); z-index:0; pointer-events:none; filter:blur(70px);
+    background:radial-gradient(circle, rgba(217,86,12,.22) 0%, rgba(20,64,107,.4) 48%, transparent 72%);
+  }
+  #servicios .wrap { position:relative; z-index:1; }
   #servicios .kicker, #servicios h2 { color:#fff; }
   #hero .hero-inner { position:relative; z-index:2; padding:96px 24px; text-align:center; max-width:760px; margin:0 auto; pointer-events:none; }
   #hero .hero-inner [contenteditable], #hero .hero-inner .btn { pointer-events:auto; }
@@ -191,6 +195,7 @@
   #hero-eyebrow { font-size:12.5px; }
   #hero-h1 { font-size:36px; }
   #hero-entradilla { font-size:18px; }
+  #hero-entradilla:empty { display:none; }
   #hero-cta1 { font-size:15.5px; }
   #nosotros .kicker { font-size:12.5px; }
   @media (max-width:600px){ #hero-h1{ font-size:28px; } #hero-entradilla{ font-size:16px; } }
@@ -232,6 +237,18 @@
   .hero-grid { display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center; padding:56px 0; }
   .hero-grid h1 { font-size:40px; line-height:1.12; font-weight:700; letter-spacing:-0.01em; margin:10px 0 16px; }
   .hero-grid p.entradilla { font-size:16px; color:var(--text-muted); max-width:520px; margin:0 0 26px; }
+
+  /* ---- hero: tarjetas de ventajas (reemplazan el parrafo corrido, iconos propios -- no se repiten los de Servicios) ---- */
+  .hero-ventajas { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:900px; margin:0 auto 32px; text-align:left; }
+  .hero-ventajas.oculto { display:none; }
+  .hero-ventaja { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 18px; }
+  .hero-ventaja__icono { display:flex; width:38px; height:38px; margin-bottom:14px; }
+  .hero-ventaja__icono svg { width:100%; height:100%; }
+  .hero-ventaja__icono--azul { color:#14406B; }
+  .hero-ventaja__icono--naranja { color:#D9560C; }
+  .hero-ventaja h3 { font-size:15px; margin:0 0 6px; }
+  .hero-ventaja p { font-size:13px; color:var(--text-muted); margin:0; line-height:1.5; }
+  @media (max-width:820px){ .hero-ventajas{ grid-template-columns:1fr; max-width:420px; } }
   .cta-row { display:flex; gap:12px; flex-wrap:wrap; }
   /* ---- botones: "liquid glass" -- vidrio esmerilado con blur, degradado sutil y sombra interior ---- */
   .btn {
@@ -253,6 +270,17 @@
   .btn:active { transform:translateY(0); transition-duration:var(--dur-out); }
   .btn-primario { border-color:rgba(217,86,12,.45); }
   .btn-primario svg { color:#D9560C; }
+  /* CTA del hero: fondo azul solido (domina), texto en contraste, isotipo en el verde real de WhatsApp */
+  .btn-azul {
+    background:linear-gradient(145deg, rgba(20,64,107,.96) 0%, rgba(20,64,107,.84) 100%);
+    border-color:rgba(20,64,107,.9); color:#FAFAF8;
+    box-shadow:0 10px 28px -10px rgba(20,64,107,.42), inset 0 1px 1px rgba(255,255,255,.18), inset 0 -1px 2px rgba(0,0,0,.15);
+  }
+  .btn-azul svg { color:#1EA355; }
+  .btn-azul:hover {
+    background:linear-gradient(145deg, rgba(24,74,122,.98) 0%, rgba(20,64,107,.92) 100%);
+    box-shadow:0 16px 34px -10px rgba(20,64,107,.52), inset 0 1px 1px rgba(255,255,255,.22);
+  }
   .btn-primario:hover { border-color:rgba(217,86,12,.7); box-shadow:0 16px 34px -10px rgba(217,86,12,.26), inset 0 1px 1px rgba(255,255,255,.8); }
   /* mismo cristal, pero templado para el fondo oscuro del footer */
   footer.site .btn {
@@ -297,7 +325,7 @@
   }
   .paso:hover { transform:translateY(-4px); box-shadow:0 12px 26px rgba(0,0,0,.08); border-color:var(--accent); }
   .paso-num { font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:#D9560C; }
-  .paso:nth-child(even) .paso-num { color:#14406B; }
+  .paso:nth-child(2) .paso-num, .paso:nth-child(3) .paso-num { color:#14406B; }
   .paso h3 { font-size:15px; margin:8px 0 6px; }
   .paso p { font-size:13px; color:var(--text-muted); margin:0; }
   @media (max-width:500px){ .flujo-grid{ grid-template-columns:1fr; } }
@@ -426,37 +454,28 @@
   footer.site { position:relative; background:var(--footer-bg); color:var(--footer-text); padding:64px 0 30px; overflow:hidden; transition:background var(--dur-in) var(--ease-out); }
   footer.site .wrap { position:relative; z-index:1; }
   .footer-centrado { display:flex; flex-direction:column; align-items:center; text-align:center; gap:22px; }
-  .footer-copy { max-width:560px; display:flex; flex-direction:column; align-items:center; }
-  footer.site h2 { font-size:30px; margin:8px 0 22px; max-width:560px; }
+  .footer-copy { max-width:720px; display:flex; flex-direction:column; align-items:center; }
+  footer.site h2 { font-size:30px; margin:8px 0 22px; max-width:720px; white-space:nowrap; }
   .logo-slot--footer {
     display:flex; align-items:center; justify-content:center;
-    height:64px; opacity:.95; pointer-events:none;
+    height:110px; opacity:.95; pointer-events:none;
   }
-  .logo-slot--footer svg, .logo-slot--footer img { height:64px; width:auto; max-width:260px; object-fit:contain; }
+  .logo-slot--footer svg, .logo-slot--footer img { height:110px; width:auto; max-width:320px; object-fit:contain; }
+  @media (max-width:560px){ footer.site h2 { white-space:normal; font-size:24px; } }
   .footer-meta { margin-top:50px; padding-top:24px; border-top:1px solid rgba(255,255,255,.12); display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-size:12.5px; color:var(--footer-text-muted); }
 
   /* ---- footer: version cinematografica (opcional, panel de revision) ----
      "cortina": el wrapper vive en el flujo normal con clip-path, y el footer
      real queda fijo al viewport debajo -- al hacer scroll, la cortina se va
      abriendo y revela el footer progresivamente. Clasico por defecto. */
-  .footer-cinematico__grid, .footer-cinematico__glow, .footer-cinematico__texto-gigante { display:none; }
+  .footer-cinematico__glow, .footer-cinematico__texto-gigante { display:none; }
   body.modo-footer-cinematico .footer-cortina { position:relative; height:100vh; width:100%; clip-path:polygon(0% 0, 100% 0%, 100% 100%, 0 100%); }
   body.modo-footer-cinematico #footer-site {
     position:fixed; bottom:0; left:0; width:100%; height:100vh;
     display:flex; flex-direction:column; justify-content:center; padding:0;
   }
-  body.modo-footer-cinematico .footer-cinematico__grid,
   body.modo-footer-cinematico .footer-cinematico__glow,
   body.modo-footer-cinematico .footer-cinematico__texto-gigante { display:block; }
-  .footer-cinematico__grid {
-    position:absolute; inset:0; z-index:0; pointer-events:none;
-    background-size:56px 56px;
-    background-image:
-      linear-gradient(to right, rgba(250,250,248,.045) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(250,250,248,.045) 1px, transparent 1px);
-    mask-image:linear-gradient(to bottom, transparent, black 30%, black 72%, transparent);
-    -webkit-mask-image:linear-gradient(to bottom, transparent, black 30%, black 72%, transparent);
-  }
   .footer-cinematico__glow {
     position:absolute; left:50%; top:45%; width:72vw; height:52vh; max-width:900px;
     transform:translate(-50%,-50%); z-index:0; pointer-events:none; filter:blur(70px);
@@ -511,7 +530,7 @@
   #panel-revision .pr-reset { align-self:flex-start; color:#B3413A; background:none; border:none; text-decoration:underline; cursor:pointer; font-size:11.5px; padding:0; }
 
   /* ---- distribucion de titulares: sin viudas ---- */
-  #hero-h1, #nosotros h2, footer.site h2, .card-servicio h3, .paso h3 { text-wrap:balance; }
+  #hero-h1, #nosotros h2, .card-servicio h3, .paso h3 { text-wrap:balance; }
 
   /* ---- afordancia de edicion visible tambien en touch (sin :hover) ---- */
   @media (hover:none) {
@@ -610,9 +629,26 @@
         <span class="hero-rotador__prefijo">Especialistas en</span>
         <span class="hero-rotador__viewport" id="hero-rotador-viewport"></span>
       </div>
-      <p class="entradilla" id="hero-entradilla" contenteditable="true" style="margin:0 auto 30px;" data-label="Hero · Párrafo">Realizamos tu análisis de normatividad y viabilidad, integramos tu expediente, se gestiona y se le da puntual seguimiento hasta que se autorice. Tú no pierdes tiempo aprendiendo una plataforma que no vas a volver a usar. Ni haciendo filas innecesarias en dependencias de gobierno para ingreso de expedientes.</p>
+      <p class="entradilla" id="hero-entradilla" contenteditable="true" style="margin:0 auto 30px;" data-label="Hero · Párrafo"></p>
+      <div class="hero-ventajas" id="hero-ventajas">
+        <div class="hero-ventaja">
+          <span class="hero-ventaja__icono hero-ventaja__icono--azul" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M15 3v4h4"/><circle cx="10.3" cy="14.3" r="2.8"/><path d="M12.4 16.4L14.5 18.5"/></svg></span>
+          <h3>Análisis de viabilidad</h3>
+          <p>Revisamos la normatividad aplicable a tu predio y proyecto antes de iniciar cualquier trámite.</p>
+        </div>
+        <div class="hero-ventaja">
+          <span class="hero-ventaja__icono hero-ventaja__icono--naranja" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/><path d="M8.5 15.3l2 2 4-4.3"/></svg></span>
+          <h3>Gestión integral del expediente</h3>
+          <p>Lo integramos y le damos seguimiento puntual hasta que se autorice.</p>
+        </div>
+        <div class="hero-ventaja">
+          <span class="hero-ventaja__icono hero-ventaja__icono--azul" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></span>
+          <h3>Cero fricción</h3>
+          <p>Sin plataformas que aprender ni filas en dependencias de gobierno.</p>
+        </div>
+      </div>
       <div class="cta-row" style="justify-content:center;">
-        <a class="btn btn-primario" id="hero-cta1" contenteditable="true" href="#" data-label="Hero · Botón 1"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.816 9.816 0 0012.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 01-1.27-4.37c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.83 2.42a8.183 8.183 0 012.41 5.82c.02 4.54-3.68 8.24-8.22 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43-.14 0-.31-.01-.47-.01-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.25 3.73.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.14-1.18-.06-.11-.23-.17-.48-.29z"/></svg>Cuéntanos tu caso</a>
+        <a class="btn btn-azul" id="hero-cta1" contenteditable="true" href="#" data-label="Hero · Botón 1"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.816 9.816 0 0012.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 01-1.27-4.37c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.83 2.42a8.183 8.183 0 012.41 5.82c.02 4.54-3.68 8.24-8.22 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43-.14 0-.31-.01-.47-.01-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.25 3.73.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.14-1.18-.06-.11-.23-.17-.48-.29z"/></svg>Cuéntanos tu caso</a>
       </div>
     </div>
   </section>
@@ -760,7 +796,6 @@
 
 <div class="footer-cortina" id="footer-cortina">
 <footer class="site" id="footer-site">
-  <div class="footer-cinematico__grid" aria-hidden="true"></div>
   <div class="footer-cinematico__glow" aria-hidden="true"></div>
   <div class="footer-cinematico__texto-gigante" id="footer-texto-gigante" aria-hidden="true">CapitalArq</div>
   <div class="wrap footer-cinematico__capa" id="footer-contenido">
@@ -768,7 +803,7 @@
       <div class="logo-slot logo-slot--footer" id="logo-slot-footer"></div>
       <div class="footer-copy">
         <div class="kicker" style="color:#8fb8e0;" contenteditable="true" data-field="footer-kicker" data-label="Pie de página · Etiqueta">¿Tu obra está parada por un trámite?</div>
-        <h2 contenteditable="true" data-field="footer-titulo" data-label="Pie de página · Título">Escríbenos y vemos qué necesita tu caso.</h2>
+        <h2 contenteditable="true" data-field="footer-titulo" data-label="Pie de página · Título">Contáctanos y analizamos tu caso.</h2>
         <a class="btn btn-primario" contenteditable="true" href="#" data-field="footer-cta" data-label="Pie de página · Botón"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.05 4.91A9.816 9.816 0 0012.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 01-1.27-4.37c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.83 2.42a8.183 8.183 0 012.41 5.82c.02 4.54-3.68 8.24-8.22 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43-.14 0-.31-.01-.47-.01-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.25 3.73.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.14-1.18-.06-.11-.23-.17-.48-.29z"/></svg>Escríbenos por WhatsApp</a>
       </div>
     </div>
@@ -843,7 +878,7 @@
    cambios (de Chris o nuestros), se sube este numero. Si el navegador trae guardado
    un borrador de una version anterior, se borra solo -- asi nadie se queda viendo
    una configuracion vieja por un "Guardar cambios" a medias o una prueba olvidada. */
-const CONTENT_VERSION = '2026-11-12-r6';
+const CONTENT_VERSION = '2026-11-12-r7';
 (function(){
   const clavePrevia = localStorage.getItem('capitalarq_maqueta_version');
   if (clavePrevia !== CONTENT_VERSION) {
@@ -883,7 +918,7 @@ const HERO_ANGLES = {
   a: {
     eyebrow: "GESTIÓN DE TRÁMITES DE CONSTRUCCIÓN EN CDMX",
     h1: 'Tu proyecto <span style="color:#D9560C;">avanza</span>. Nosotros nos encargamos de <span style="color:#14406B;">hacerlo posible</span>.',
-    entradilla: "Realizamos tu análisis de normatividad y viabilidad, integramos tu expediente, se gestiona y se le da puntual seguimiento hasta que se autorice. Tú no pierdes tiempo aprendiendo una plataforma que no vas a volver a usar. Ni haciendo filas innecesarias en dependencias de gobierno para ingreso de expedientes.",
+    entradilla: "",
     cta1: "Cuéntanos tu caso"
   },
   b: {
@@ -1047,6 +1082,7 @@ function setAngle(key){
   document.getElementById('hero-h1').innerHTML = a.h1;
   document.getElementById('hero-entradilla').innerHTML = a.entradilla;
   document.getElementById('hero-cta1').innerHTML = WHATSAPP_ICONO_SVG + a.cta1;
+  document.getElementById('hero-ventajas').classList.toggle('oculto', key !== 'a');
   document.querySelectorAll('#angle-opts button').forEach(b => b.classList.toggle('active', b.dataset.angle === key));
   localStorage.setItem('capitalarq_maqueta_angle', key);
 }
