@@ -406,6 +406,47 @@
   @media (max-width:900px){ .footer-top{ grid-template-columns:1fr; } .logo-slot--footer{ display:none; } }
   .footer-meta { margin-top:50px; padding-top:24px; border-top:1px solid rgba(255,255,255,.12); display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-size:12.5px; color:var(--footer-text-muted); }
 
+  /* ---- footer: version cinematografica (opcional, panel de revision) ----
+     "cortina": el wrapper vive en el flujo normal con clip-path, y el footer
+     real queda fijo al viewport debajo -- al hacer scroll, la cortina se va
+     abriendo y revela el footer progresivamente. Clasico por defecto. */
+  .footer-cinematico__grid, .footer-cinematico__glow, .footer-cinematico__texto-gigante { display:none; }
+  body.modo-footer-cinematico .footer-cortina { position:relative; height:100vh; width:100%; clip-path:polygon(0% 0, 100% 0%, 100% 100%, 0 100%); }
+  body.modo-footer-cinematico #footer-site {
+    position:fixed; bottom:0; left:0; width:100%; height:100vh;
+    display:flex; flex-direction:column; justify-content:center; padding:0;
+  }
+  body.modo-footer-cinematico .footer-cinematico__grid,
+  body.modo-footer-cinematico .footer-cinematico__glow,
+  body.modo-footer-cinematico .footer-cinematico__texto-gigante { display:block; }
+  .footer-cinematico__grid {
+    position:absolute; inset:0; z-index:0; pointer-events:none;
+    background-size:56px 56px;
+    background-image:
+      linear-gradient(to right, rgba(250,250,248,.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(250,250,248,.045) 1px, transparent 1px);
+    mask-image:linear-gradient(to bottom, transparent, black 30%, black 72%, transparent);
+    -webkit-mask-image:linear-gradient(to bottom, transparent, black 30%, black 72%, transparent);
+  }
+  .footer-cinematico__glow {
+    position:absolute; left:50%; top:45%; width:72vw; height:52vh; max-width:900px;
+    transform:translate(-50%,-50%); z-index:0; pointer-events:none; filter:blur(70px);
+    background:radial-gradient(circle, rgba(217,86,12,.22) 0%, rgba(20,64,107,.4) 48%, transparent 72%);
+  }
+  .footer-cinematico__texto-gigante {
+    position:absolute; bottom:-3.5vh; left:50%; transform:translateX(-50%);
+    font-family:'Poppins', sans-serif; font-size:13vw; font-weight:800; letter-spacing:-0.03em; line-height:.78;
+    white-space:nowrap; z-index:0; pointer-events:none; user-select:none;
+    color:transparent; -webkit-text-stroke:1px rgba(250,250,248,.08);
+    background:linear-gradient(180deg, rgba(250,250,248,.1) 0%, transparent 62%);
+    -webkit-background-clip:text; background-clip:text;
+  }
+  .footer-cinematico__capa { position:relative; z-index:2; }
+  @media (prefers-reduced-motion: reduce){
+    body.modo-footer-cinematico .footer-cortina { clip-path:none; height:auto; }
+    body.modo-footer-cinematico #footer-site { position:relative; height:auto; padding:64px 0 30px; }
+  }
+
   /* ---- panel de revisión ---- */
   #panel-revision {
     position:fixed; bottom:16px; right:16px; z-index:100;
@@ -689,8 +730,12 @@
 
 </main>
 
-<footer class="site">
-  <div class="wrap">
+<div class="footer-cortina" id="footer-cortina">
+<footer class="site" id="footer-site">
+  <div class="footer-cinematico__grid" aria-hidden="true"></div>
+  <div class="footer-cinematico__glow" aria-hidden="true"></div>
+  <div class="footer-cinematico__texto-gigante" id="footer-texto-gigante" aria-hidden="true">CapitalArq</div>
+  <div class="wrap footer-cinematico__capa" id="footer-contenido">
     <div class="footer-top">
       <div class="footer-copy">
         <div class="kicker" style="color:#8fb8e0;" contenteditable="true" data-field="footer-kicker" data-label="Pie de página · Etiqueta">¿Tu obra está parada por un trámite?</div>
@@ -699,13 +744,14 @@
       </div>
       <div class="logo-slot logo-slot--footer" id="logo-slot-footer"></div>
     </div>
-    <div class="footer-meta">
+    <div class="footer-meta" id="footer-meta">
       <div><b><i>CapitalArq</i></b> — Protección Civil y Arquitectura</div>
       <div>Instagram: <a href="https://instagram.com/capitalarq" target="_blank" style="color:#8fb8e0;">@capitalarq</a></div>
       <div>CDMX</div>
     </div>
   </div>
 </footer>
+</div>
 
 <div id="panel-revision" class="collapsed">
   <div class="pr-head" onclick="toggleReviewPanel()">
@@ -726,6 +772,13 @@
       <div class="angle-opts" id="angle-opts">
         <button data-angle="a" class="active">A — Contraste</button>
         <button data-angle="b">B — Educación</button>
+      </div>
+    </div>
+    <div>
+      <h4>Pie de página</h4>
+      <div class="angle-opts" id="footer-style-opts">
+        <button data-footer-style="clasico" class="active">Clásico</button>
+        <button data-footer-style="cinematico">Cinematográfico</button>
       </div>
     </div>
     <p class="pr-note">Toca cualquier texto de la página para editarlo, y usa los botones ▲▼ que aparecen sobre cada sección para reordenarla. Fotos son de Unsplash, temporales — se sustituyen por las de Chris. Cuando termines, pulsa «Guardar cambios» abajo a la izquierda para mandárnoslo.</p>
@@ -754,6 +807,9 @@
   </div>
 </div>
 
+<!-- GSAP + ScrollTrigger: solo para la version cinematografica (opcional) del footer -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 /* control de version del contenido: cada vez que se publica una ronda nueva de
    cambios (de Chris o nuestros), se sube este numero. Si el navegador trae guardado
@@ -971,6 +1027,43 @@ document.getElementById('angle-opts').addEventListener('click', e => {
   if (e.target.dataset.angle) setAngle(e.target.dataset.angle);
 });
 
+/* ---- pie de pagina: version cinematografica opcional (GSAP ScrollTrigger) ----
+   "cortina" en CSS hace la mayor parte del truco (clip-path + footer fijo debajo);
+   GSAP solo anima el texto de fondo y el contenido mientras se revela con el scroll. */
+let currentFooterStyle = 'clasico';
+let footerTweens = [];
+function matarAnimacionFooterCinematico(){
+  footerTweens.forEach(t => { if (t.scrollTrigger) t.scrollTrigger.kill(); t.kill(); });
+  footerTweens = [];
+  if (window.gsap) gsap.set(['#footer-texto-gigante', '#footer-contenido', '#footer-meta'], { clearProps:'all' });
+}
+function activarFooterCinematico(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+  matarAnimacionFooterCinematico();
+  const t1 = gsap.fromTo('#footer-texto-gigante',
+    { y: '7vh', opacity: .35 },
+    { y: '0vh', opacity: 1, ease: 'none',
+      scrollTrigger: { trigger: '#footer-cortina', start: 'top 85%', end: 'bottom bottom', scrub: 1 } });
+  const t2 = gsap.fromTo(['#footer-contenido', '#footer-meta'],
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, stagger: 0.15, ease: 'none',
+      scrollTrigger: { trigger: '#footer-cortina', start: 'top 55%', end: 'bottom bottom', scrub: 1 } });
+  footerTweens = [t1, t2];
+}
+function setFooterStyle(key){
+  currentFooterStyle = key;
+  document.body.classList.toggle('modo-footer-cinematico', key === 'cinematico');
+  document.querySelectorAll('#footer-style-opts button').forEach(b => b.classList.toggle('active', b.dataset.footerStyle === key));
+  localStorage.setItem('capitalarq_maqueta_footer_style', key);
+  if (key === 'cinematico') activarFooterCinematico(); else matarAnimacionFooterCinematico();
+  if (window.ScrollTrigger) setTimeout(() => ScrollTrigger.refresh(), 80);
+}
+document.getElementById('footer-style-opts').addEventListener('click', e => {
+  if (e.target.dataset.footerStyle) setFooterStyle(e.target.dataset.footerStyle);
+});
+
 /* ---- reordenar secciones ---- */
 function addToolbars(){
   document.querySelectorAll('#page-sections > section').forEach(sec => {
@@ -1026,6 +1119,7 @@ const DEFAULT_ORDER = Array.from(document.querySelectorAll('#page-sections > sec
 const DEFAULT_LOGO = 'revision_chris';
 const DEFAULT_ACCENT = 'oxford';
 const DEFAULT_ANGLE = 'a';
+const DEFAULT_FOOTER_STYLE = 'clasico';
 function captureOriginals(){
   document.querySelectorAll('[contenteditable="true"]').forEach(el => {
     const key = fieldKey(el);
@@ -1056,6 +1150,9 @@ function buildDiffReport(){
   }
   if (currentAngleKey !== DEFAULT_ANGLE) {
     bloques.push(`[Ángulo del hero]\nSe cambió de la versión A a la versión B (o viceversa) — revisa los textos del hero arriba, ya reflejan la versión elegida.`);
+  }
+  if (currentFooterStyle !== DEFAULT_FOOTER_STYLE) {
+    bloques.push(`[Pie de página]\nSe cambió a la versión Cinematográfica (cortina + texto de fondo animado al hacer scroll).`);
   }
   const ordenActual = Array.from(document.querySelectorAll('#page-sections > section')).map(s => s.id);
   if (JSON.stringify(ordenActual) !== JSON.stringify(DEFAULT_ORDER)) {
@@ -1392,6 +1489,7 @@ setupReveal();
 setLogo(localStorage.getItem('capitalarq_maqueta_logo') || 'revision_chris');
 applyAccent(localStorage.getItem('capitalarq_maqueta_accent') || 'oxford');
 setAngle(localStorage.getItem('capitalarq_maqueta_angle') || 'a');
+setFooterStyle(localStorage.getItem('capitalarq_maqueta_footer_style') || DEFAULT_FOOTER_STYLE);
 // el orden importa: los originales se capturan con el angulo ya aplicado,
 // y la restauracion de texto editado corre al final para que nada lo pise despues.
 captureOriginals();
