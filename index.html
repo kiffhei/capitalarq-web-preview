@@ -165,14 +165,20 @@
 
   /* ---- hero: reticula interactiva en tinta sobre papel ---- */
   #hero { padding:0; background:var(--bg); overflow:hidden; border-bottom:none; }
+  /* El fondo NO viaja con la seccion: queda fijo al viewport y la seccion lo va descubriendo
+     con el scroll, igual que la mancha del footer bajo su cortina. Mismos colores y misma
+     altura en pantalla (45%) que .footer-cinematico__glow, para que se lean como la misma
+     mancha vista por dos ventanas distintas. */
   #servicios {
-    position:relative; background-color:#141414; border-bottom:none;
-  } /* mismo fondo oscuro + mancha que el footer, sin cuadricula -- consistencia entre ambos */
-  #servicios::before {
-    content:''; position:absolute; left:50%; top:45%; width:72vw; height:52vh; max-width:900px;
-    transform:translate(-50%,-50%); z-index:0; pointer-events:none; filter:blur(70px);
-    background:radial-gradient(circle, rgba(217,86,12,.22) 0%, rgba(20,64,107,.4) 48%, transparent 72%);
+    position:relative; border-bottom:none;
+    background-color:#141414;
+    background-image:radial-gradient(ellipse min(38vw,520px) min(30vh,360px) at 50% 45%,
+      rgba(217,86,12,.22) 0%, rgba(20,64,107,.4) 45%, rgba(20,64,107,.12) 70%, transparent 100%);
+    background-attachment:fixed; background-repeat:no-repeat;
   }
+  /* iOS Safari ignora background-attachment:fixed -- en movil degrada a mancha que viaja con la
+     seccion (el comportamiento anterior), que ahi no se nota porque no hay con que compararlo. */
+  @media (max-width:820px){ #servicios { background-attachment:scroll; } }
   #servicios .wrap { position:relative; z-index:1; }
   #servicios .kicker, #servicios h2 { color:#fff; }
   #hero .hero-inner { position:relative; z-index:2; padding:96px 24px; text-align:center; max-width:760px; margin:0 auto; pointer-events:none; }
